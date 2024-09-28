@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "../pages/login";
 import SignupPage from "../pages/signup";
 import ChatPage from "../pages/chat";
-import { auth, onAuthStateChanged } from "../config/firebase"
+import { auth, onAuthStateChanged } from "./firebase";
 import { useEffect, useState } from "react";
 import React from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -19,7 +19,8 @@ function AppRouter() {
             } else {
                 setUser(false)
             }
-            setLoader(false)
+            console.log(user);
+            setLoader(false);
         })
     }, [])
     return (
@@ -31,12 +32,9 @@ function AppRouter() {
                 :
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={User ? <LoginPage /> :
-                            <Navigate to={"/chatapp"} />} />
-                        <Route path="/signup" element={User ? <SignupPage /> :
-                            <Navigate to={"/chatapp"} />} />
-                        <Route path="chatapp" element={User ? <ChatPage /> :
-                            <Navigate to={"/"} />} />
+                        <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <LoginPage />} />
+                        <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignupPage />} />
+                        <Route path="chatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} />
                     </Routes>
                 </BrowserRouter>
             }
