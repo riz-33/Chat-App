@@ -11,7 +11,11 @@ const LoginForm = ({loginUser}) => (
             span: 16,
         }}
         style={{
-            maxWidth: 600,
+            width:"100%",
+            display:"flex",
+            justifyContent:"center",
+            flexDirection:"column",
+            alignItems:"center",
         }}
         initialValues={{
             remember: true,
@@ -23,6 +27,7 @@ const LoginForm = ({loginUser}) => (
         <Form.Item
             label="Username"
             name="username"
+            style={{width:"100%",display:"flex",justifyContent:"center"}}
             rules={[
                 {
                     required: true,
@@ -39,6 +44,7 @@ const LoginForm = ({loginUser}) => (
 
         <Form.Item
             label="Password"
+            style={{width:"100%",display:"flex",justifyContent:"center"}}
             name="password"
             rules={[
                 {
@@ -52,6 +58,7 @@ const LoginForm = ({loginUser}) => (
 
         <Form.Item
             name="remember"
+            style={{width:"100%",display:"flex",justifyContent:"center"}}
             valuePropName="checked"
             wrapperCol={{
                 offset: 8,
@@ -66,6 +73,8 @@ const LoginForm = ({loginUser}) => (
                 offset: 8,
                 span: 16,
             }}
+            style={{width:"100%",display:"flex",justifyContent:"center"}}
+
         >
             <Button type="primary" htmlType="submit">
                 Submit

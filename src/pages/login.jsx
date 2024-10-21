@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import LoginForm from "../components/login";
+import { Link } from "react-router-dom";
 import { auth, signInWithEmailAndPassword } from "../config/firebase";
 
 function LoginPage() {
@@ -16,7 +16,12 @@ function LoginPage() {
             });
     }
     return (
-        <div>
+        <div style={{
+            display:"flex",
+            justifyContent:"center",
+            alignItems:"center",
+            flexDirection:"column"
+        }}>
             <h1 style={{ textAlign: "center" }}>Login Page</h1>
             <LoginForm loginUser={loginUser} />
             <p style={{ textAlign: "center" }}>
