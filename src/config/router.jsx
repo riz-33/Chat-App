@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import React from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
-import SignIn from "../components/newlogin";
+import Login from "../components/newlogin";
+import SignUp from "../components/newsignup";
 
 function AppRouter() {
     const [User, setUser] = useState(false)
@@ -33,10 +34,10 @@ function AppRouter() {
                 :
                 <BrowserRouter>
                     <Routes>
-                    <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <SignIn />} />
+                    <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <Login />} />
 
                         {/* <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <LoginPage />} /> */}
-                        <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignupPage />} />
+                        <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignUp />} />
                         <Route path="chatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} />
                     </Routes>
                 </BrowserRouter>

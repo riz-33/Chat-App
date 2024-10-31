@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-// import CssBaseline from '@mui/material/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
@@ -36,7 +36,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
     }),
 }));
 
-const LoginContainer = styled(Stack)(({ theme }) => ({
+const SignUpContainer = styled(Stack)(({ theme }) => ({
     // height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
     minHeight: '100%',
     padding: theme.spacing(2),
@@ -59,7 +59,7 @@ const LoginContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
-export default function Login(props) {
+export default function SignUp(props) {
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
@@ -74,14 +74,14 @@ export default function Login(props) {
 
         let isValid = true;
 
-        // if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-        //     setEmailError(true);
-        //     setEmailErrorMessage('Please enter a valid email address.');
-        //     isValid = false;
-        // } else {
-        //     setEmailError(false);
-        //     setEmailErrorMessage('');
-        // }
+        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError(false);
+            setEmailErrorMessage('');
+        }
 
         if (!password.value || password.value.length < 6) {
             setPasswordError(true);
@@ -119,7 +119,7 @@ export default function Login(props) {
     };
 
     return (
-        < LoginContainer direction="column" justifyContent="space-between" >
+        < SignUpContainer direction="column" justifyContent="space-between" >
             <Card variant="outlined">
                 {/* <SitemarkIcon /> */}
                 <Typography
@@ -128,7 +128,7 @@ export default function Login(props) {
                     textAlign={"center"}
                     sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
                 >
-                    Login
+                    Sign Up
                 </Typography>
                 <Box
                     component="form"
@@ -149,7 +149,7 @@ export default function Login(props) {
                             color={nameError ? 'error' : 'primary'}
                         />
                     </FormControl>
-                    {/* <FormControl>
+                    <FormControl>
                         <FormLabel htmlFor="email">Email</FormLabel>
                         <TextField
                             required
@@ -163,7 +163,7 @@ export default function Login(props) {
                             helperText={emailErrorMessage}
                             color={passwordError ? 'error' : 'primary'}
                         />
-                    </FormControl> */}
+                    </FormControl>
                     <FormControl>
                         <FormLabel htmlFor="password">Password</FormLabel>
                         <TextField
@@ -190,17 +190,17 @@ export default function Login(props) {
                         variant="contained"
                         onClick={validateInputs}
                     >
-                        Login
+                        Register
                     </Button>
                     <Typography sx={{ textAlign: 'center' }}>
-                        Don't have an account?{' '}
+                        Already have an account?{' '}
                         <span>
                             <Link
-                                href="/signup/"
+                                href="/"
                                 variant="body3"
                                 sx={{ alignSelf: 'center' }}
                             >
-                                Sign up
+                                Login
                             </Link>
                         </span>
                     </Typography>
@@ -227,6 +227,6 @@ export default function Login(props) {
                     </Button> */}
                 </Box>
             </Card>
-        </LoginContainer >
+        </SignUpContainer >
     );
 }
