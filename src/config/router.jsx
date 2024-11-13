@@ -1,14 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import LoginPage from "../pages/login";
-import SignupPage from "../pages/signup";
 import ChatPage from "../pages/chat";
 import { auth, onAuthStateChanged } from "./firebase";
 import { useEffect, useState } from "react";
 import React from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
-import Login from "../components/newlogin";
-import SignUp from "../components/newsignup";
+import LoginForm from "../pages/login";
+import SignupForm from "../pages/mysignup";
 
 function AppRouter() {
     const [User, setUser] = useState(false)
@@ -34,11 +32,9 @@ function AppRouter() {
                 :
                 <BrowserRouter>
                     <Routes>
-                    <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <Login />} />
-
-                        {/* <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <LoginPage />} /> */}
-                        <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignUp />} />
-                        <Route path="chatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} />
+                        <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <LoginForm />} />
+                        <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignupForm />} />
+                        <Route path="/chatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} />
                     </Routes>
                 </BrowserRouter>
             }

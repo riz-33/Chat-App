@@ -1,11 +1,11 @@
 import React from 'react';
 import { TextField, Button, Container, Grid, Typography, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { auth, signInWithEmailAndPassword } from "../config/firebase";
+import { auth, createUserWithEmailAndPassword } from "../config/firebase";
 import { useForm } from "react-hook-form"
-import { db, doc, getDoc } from '../config/firebase';
+import { db, doc, setDoc } from '../config/firebase';
 
-const LoginForm = () => {
+const SignupForm = () => {
     const {
         register,
         handleSubmit,
@@ -13,28 +13,26 @@ const LoginForm = () => {
     } = useForm()
 
     const onSubmit = (data) => {
-        signInWithEmailAndPassword(auth, data.email, data.password)
+        createUserWithEmailAndPassword(auth, data.email, data.password)
             .then(async (response) => {
-                const docRef = doc(db, "users", response.user.uid);
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    console.log("Document data:", docSnap.data());
-                } else {
-                    console.log("No such document!");
-                }
+                // console.log(response, "user")
+                await setDoc(doc(db, "users", response.user.uid), {
+                    email: data.email,
+                    // state: "CA",
+                    // country: "USA"
+                });
             })
             .catch((error) => {
                 console.log(error)
             });
         console.log(data)
-    };
+    }
 
     return (
         <Container component="main" maxWidth="xs">
             <Paper elevation={3} sx={{ padding: 3, marginTop: 10 }}>
                 <Typography variant="h4" align="center" gutterBottom fontFamily='Helvetica Neue'>
-                    Login
+                    Sign Up
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
@@ -62,11 +60,11 @@ const LoginForm = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <Button type="submit" fullWidth variant="contained" color="primary">
-                                Login
+                                Register
                             </Button>
                         </Grid>
                         <Grid item xs={12} textAlign='center' fontFamily='Helvetica Neue'>
-                            Don't have an account? <Link to={"/signup"}>Sign up</Link>
+                            Already have an account? <Link to={"/"}>Login</Link>
                         </Grid>
                     </Grid>
                 </form>
@@ -75,4 +73,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default SignupForm;

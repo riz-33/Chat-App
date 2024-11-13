@@ -4,6 +4,7 @@ import {
     Search, EllipsisButton
 } from '@chatscope/chat-ui-kit-react';
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+import { TbLogout2 } from "react-icons/tb";
 
 function ChatApp() {
     return (
@@ -16,7 +17,21 @@ function ChatApp() {
             <Sidebar
                 position="left"
             >
+                <ConversationHeader>
+                    <Avatar
+                        name="Zoe"
+                        src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                    />
+                    <ConversationHeader.Content
+                        userName="Zoe"
+                    />
+                    <ConversationHeader.Actions>
+                        <TbLogout2 cursor={"pointer"} size={30} />
+                    </ConversationHeader.Actions>
+                </ConversationHeader>
+
                 <Search placeholder="Search..." />
+
                 <ConversationList>
                     <Conversation
                         info="Yes i can do it for you"
@@ -29,86 +44,8 @@ function ChatApp() {
                             status="available"
                         />
                     </Conversation>
-                    <Conversation
-                        info="Yes i can do it for you"
-                        lastSenderName="Joe"
-                        name="Joe"
-                    >
-                        <Avatar
-                            name="Joe"
-                            src="https://chatscope.io/storybook/react/assets/joe-v8Vy3KOS.svg"
-                            status="dnd"
-                        />
-                    </Conversation>
-                    <Conversation
-                        info="Yes i can do it for you"
-                        lastSenderName="Emily"
-                        name="Emily"
-                        unreadCnt={3}
-                    >
-                        <Avatar
-                            name="Emily"
-                            src="https://chatscope.io/storybook/react/assets/emily-xzL8sDL2.svg"
-                            status="available"
-                        />
-                    </Conversation>
-                    <Conversation
-                        info="Yes i can do it for you"
-                        lastSenderName="Kai"
-                        name="Kai"
-                        unreadDot
-                    >
-                        <Avatar
-                            name="Kai"
-                            src="https://chatscope.io/storybook/react/assets/kai-5wHRJGb2.svg"
-                            status="unavailable"
-                        />
-                    </Conversation>
-                    <Conversation
-                        info="Yes i can do it for you"
-                        lastSenderName="Akane"
-                        name="Akane"
-                    >
-                        <Avatar
-                            name="Akane"
-                            src="https://chatscope.io/storybook/react/assets/akane-MXhWvx63.svg"
-                            status="eager"
-                        />
-                    </Conversation>
-                    <Conversation
-                        info="Yes i can do it for you"
-                        lastSenderName="Eliot"
-                        name="Eliot"
-                    >
-                        <Avatar
-                            name="Eliot"
-                            src="https://chatscope.io/storybook/react/assets/eliot-JNkqSAth.svg"
-                            status="away"
-                        />
-                    </Conversation>
-                    <Conversation
-                        info="Yes i can do it for you"
-                        lastSenderName="Zoe"
-                        name="Zoe"
-                    >
-                        <Avatar
-                            name="Zoe"
-                            src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
-                            status="dnd"
-                        />
-                    </Conversation>
-                    <Conversation
-                        info="Yes i can do it for you"
-                        lastSenderName="Patrik"
-                        name="Patrik"
-                    >
-                        <Avatar
-                            name="Patrik"
-                            src="https://chatscope.io/storybook/react/assets/patrik-yC7svbAR.svg"
-                            status="invisible"
-                        />
-                    </Conversation>
                 </ConversationList>
+
             </Sidebar>
             <ChatContainer>
                 <ConversationHeader>
@@ -143,87 +80,7 @@ function ChatApp() {
                             src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
                         />
                     </Message>
-                    <Message
-                        avatarSpacer
-                        model={{
-                            direction: 'outgoing',
-                            message: 'Hello my friend',
-                            position: 'single',
-                            sender: 'Patrik',
-                            sentTime: '15 mins ago'
-                        }}
-                    />
-                    <Message
-                        avatarSpacer
-                        model={{
-                            direction: 'incoming',
-                            message: 'Hello my friend',
-                            position: 'first',
-                            sender: 'Zoe',
-                            sentTime: '15 mins ago'
-                        }}
-                    />
-                    <Message
-                        avatarSpacer
-                        model={{
-                            direction: 'incoming',
-                            message: 'Hello my friend',
-                            position: 'normal',
-                            sender: 'Zoe',
-                            sentTime: '15 mins ago'
-                        }}
-                    />
-                    <Message
-                        avatarSpacer
-                        model={{
-                            direction: 'incoming',
-                            message: 'Hello my friend',
-                            position: 'normal',
-                            sender: 'Zoe',
-                            sentTime: '15 mins ago'
-                        }}
-                    />
-                    <Message
-                        model={{
-                            direction: 'incoming',
-                            message: 'Hello my friend',
-                            position: 'last',
-                            sender: 'Zoe',
-                            sentTime: '15 mins ago'
-                        }}
-                    >
-                        <Avatar
-                            name="Zoe"
-                            src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
-                        />
-                    </Message>
-                    <Message
-                        model={{
-                            direction: 'outgoing',
-                            message: 'Hello my friend',
-                            position: 'first',
-                            sender: 'Patrik',
-                            sentTime: '15 mins ago'
-                        }}
-                    />
-                    <Message
-                        model={{
-                            direction: 'outgoing',
-                            message: 'Hello my friend',
-                            position: 'normal',
-                            sender: 'Patrik',
-                            sentTime: '15 mins ago'
-                        }}
-                    />
-                    <Message
-                        model={{
-                            direction: 'outgoing',
-                            message: 'Hello my friend',
-                            position: 'normal',
-                            sender: 'Patrik',
-                            sentTime: '15 mins ago'
-                        }}
-                    />
+
                     <Message
                         model={{
                             direction: 'outgoing',
@@ -233,6 +90,7 @@ function ChatApp() {
                             sentTime: '15 mins ago'
                         }}
                     />
+
                     <Message
                         avatarSpacer
                         model={{
