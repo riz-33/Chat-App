@@ -16,11 +16,7 @@ const SignupForm = () => {
         createUserWithEmailAndPassword(auth, data.email, data.password)
             .then(async (response) => {
                 // console.log(response, "user")
-                await setDoc(doc(db, "users", response.user.uid), {
-                    email: data.email,
-                    // state: "CA",
-                    // country: "USA"
-                });
+                await setDoc(doc(db, "users", response.user.uid), data);
             })
             .catch((error) => {
                 console.log(error)

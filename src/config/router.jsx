@@ -19,7 +19,7 @@ function AppRouter() {
             } else {
                 setUser(false)
             }
-            console.log(user);
+            // console.log(user);
             setLoader(false);
         })
     }, [])

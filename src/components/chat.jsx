@@ -4,9 +4,15 @@ import {
     Search, EllipsisButton
 } from '@chatscope/chat-ui-kit-react';
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+import { signOut, auth } from '../config/firebase';
 import { TbLogout2 } from "react-icons/tb";
 
 function ChatApp() {
+
+    const logOut = () => {
+        signOut(auth)
+    }
+
     return (
         <MainContainer
             responsive
@@ -26,7 +32,7 @@ function ChatApp() {
                         userName="Zoe"
                     />
                     <ConversationHeader.Actions>
-                        <TbLogout2 cursor={"pointer"} size={30} />
+                        <TbLogout2 onClick={logOut} cursor={"pointer"} size={30} />
                     </ConversationHeader.Actions>
                 </ConversationHeader>
 
@@ -61,7 +67,7 @@ function ChatApp() {
                     <ConversationHeader.Actions>
                         {/* <VoiceCallButton /> */}
                         {/* <VideoCallButton /> */}
-                        {/* <EllipsisButton orientation="vertical" /> */}
+                        <EllipsisButton orientation="vertical" />
                     </ConversationHeader.Actions>
                 </ConversationHeader>
                 <MessageList typingIndicator={<TypingIndicator content="Zoe is typing" />}>
