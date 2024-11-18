@@ -13,7 +13,7 @@ const LoginForm = () => {
     } = useForm()
 
     const onSubmit = (data) => {
-        signInWithEmailAndPassword(auth, data.email, data.password)
+        signInWithEmailAndPassword(auth, `${data.username}@example.com`, data.password)
             .then(async (response) => {
                 const docRef = doc(db, "users", response.user.uid);
                 const docSnap = await getDoc(docRef);
@@ -40,9 +40,9 @@ const LoginForm = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                {...register("email")}
-                                label="Email"
-                                type="email"
+                                {...register("username")}
+                                label="Username"
+                                type="username"
                                 fullWidth
                                 variant="outlined"
                                 color='warning'

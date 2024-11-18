@@ -6,8 +6,11 @@ import {
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { signOut, auth } from '../config/firebase';
 import { TbLogout2 } from "react-icons/tb";
+import { useContext } from 'react';
+import User from '../context/user';
 
 function ChatApp() {
+    const user = useContext(User).user
 
     const logOut = () => {
         signOut(auth)
@@ -25,11 +28,11 @@ function ChatApp() {
             >
                 <ConversationHeader>
                     <Avatar
-                        name="Zoe"
-                        src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                        name={"Zoe"}
+                        src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
                     />
                     <ConversationHeader.Content
-                        userName="Zoe"
+                        userName={user.username}
                     />
                     <ConversationHeader.Actions>
                         <TbLogout2 onClick={logOut} cursor={"pointer"} size={30} />
@@ -58,11 +61,11 @@ function ChatApp() {
                     <ConversationHeader.Back />
                     <Avatar
                         name="Zoe"
-                        src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                        src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
                     />
                     <ConversationHeader.Content
                         info="Active 10 mins ago"
-                        userName="Zoe"
+                        userName={user.username}
                     />
                     <ConversationHeader.Actions>
                         {/* <VoiceCallButton /> */}
@@ -83,7 +86,7 @@ function ChatApp() {
                     >
                         <Avatar
                             name="Zoe"
-                            src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                            src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
                         />
                     </Message>
 
@@ -118,7 +121,7 @@ function ChatApp() {
                     >
                         <Avatar
                             name="Zoe"
-                            src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                            src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
                         />
                     </Message>
                 </MessageList>
