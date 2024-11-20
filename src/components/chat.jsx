@@ -10,7 +10,7 @@ import { useCallback, useEffect, useContext, useState, } from 'react';
 import User from '../context/user';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
-    db, addDoc, doc, collection, serverTimestamp, updateDoc, where, onSnapshot, query, orderBy
+    db, addDoc, doc, collection, serverTimestamp, updateDoc, onSnapshot, query, orderBy, getDocs, getDoc, where
 
 } from '../config/firebase';
 import { formatDistance } from 'date-fns';
@@ -35,15 +35,15 @@ function ChatApp() {
         signOut(auth)
     }
 
-    const chatId = (currentId) => {
-        let id = "";
-        if (user.uid < currentId) {
-            id = `${user.uid}${currentId}`
-        } else {
-            id = `${currentId}${user.uid}`
-        }
-        return id
-    }
+    // const chatId = (currentId) => {
+    //     let id = "";
+    //     if (user.uid < currentId) {
+    //         id = `${user.uid}${currentId}`
+    //     } else {
+    //         id = `${currentId}${user.uid}`
+    //     }
+    //     return id
+    // }
 
     const onSend = async () => {
         setMessageInputValue("")
@@ -52,21 +52,21 @@ function ChatApp() {
             sentTime: new Date().toISOString(),
             sender: user.uid,
             receiver: currentChat.uid,
-            chatId: chatId(currentChat.uid),
+            // chatId: chatId(currentChat.uid),
             timeStamp: serverTimestamp()
         });
-        await updateDoc(doc(db, "users", currentChat.uid), {
-            [`lastMessages.${chatId(currentChat.uid)}`]: {
-                lastMessage: messageInputValue,
-                chatId: chatId(currentChat.uid)
-            }
-        });
-        await updateDoc(doc(db, "users", user.uid), {
-            [`lastMessages.${chatId(currentChat.uid)}`]: {
-                lastMessage: messageInputValue,
-                chatId: chatId(currentChat.uid)
-            }
-        });
+        // await updateDoc(doc(db, "users", currentChat.uid), {
+        //     [`lastMessages.${chatId(currentChat.uid)}`]: {
+        //         lastMessage: messageInputValue,
+        //         chatId: chatId(currentChat.uid)
+        //     }
+        // });
+        // await updateDoc(doc(db, "users", user.uid), {
+        //     [`lastMessages.${chatId(currentChat.uid)}`]: {
+        //         lastMessage: messageInputValue,
+        //         chatId: chatId(currentChat.uid)
+        //     }
+        // });
     }
 
     const handleBackClick = () => setSidebarVisible(!sidebarVisible);
@@ -79,42 +79,42 @@ function ChatApp() {
 
     const getAllUsers = async () => {
         const q = query(collection(db, "users"), where("email", "!=", user.email));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const users = [];
-            querySnapshot.forEach((doc) => {
-                const colors = ["757ce8", "f44336", '0D8ABC'];
-                const randomColor = colors[Math.floor(Math.random() * colors.length)]
-                const user = { ...doc.data(), id: doc.id, bgColor: randomColor }
-                users.push(user)
-
-            });
-            setChats(users)
-        })
+        const querySnapshot = await getDocs(q);
+        const users = [];
+        querySnapshot.forEach((doc) => {
+            users.push({ ...doc.data(), id: doc.id })
+            console.log(doc.id, "=>", doc.data());
+        });
+        setChats(users)
     }
 
-    const setTyping = async (typing) => {
+    useEffect(() => {
+        getAllUsers()
+    }, [])
 
-        const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[user.uid];
-        console.log("isTyping", isTyping)
+    // const setTyping = async (typing) => {
 
-        if (!isTyping && typing) {
-            console.log("api call")
-            await updateDoc(doc(db, "users", currentChat.uid), {
-                [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
-            });
-            await updateDoc(doc(db, "users", user.uid), {
-                [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
-            });
-        }
-        if (!typing) {
-            await updateDoc(doc(db, "users", currentChat.uid), {
-                [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
-            }); await updateDoc(doc(db, "users", user.uid), {
-                [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
-            });
-        }
+    //     const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[user.uid];
+    //     console.log("isTyping", isTyping)
 
-    }
+    //     if (!isTyping && typing) {
+    //         console.log("api call")
+    //         await updateDoc(doc(db, "users", currentChat.uid), {
+    //             [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
+    //         });
+    //         await updateDoc(doc(db, "users", user.uid), {
+    //             [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
+    //         });
+    //     }
+    //     if (!typing) {
+    //         await updateDoc(doc(db, "users", currentChat.uid), {
+    //             [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
+    //         }); await updateDoc(doc(db, "users", user.uid), {
+    //             [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
+    //         });
+    //     }
+
+    // }
 
     // useEffect(() => {
     //     if (messageInputValue) {
@@ -128,44 +128,42 @@ function ChatApp() {
     // }, [messageInputValue, value])
 
 
-    useEffect(() => {
-        getAllUsers()
-    }, [])
-
-    useEffect(() => {
-        if (chats.length) {
-            const currentChatIndex = chats.findIndex(v => v.id === chatIdParam);
-            if (currentChatIndex !== -1) {
-                searchParams.set("chatId", chats[currentChatIndex].id)
-                navigate(`/chat?${searchParams}`)
-                setCurrentChat(chats[currentChatIndex])
-            } else {
-                searchParams.set("chatId", chats[0].id)
-                navigate(`/chat?${searchParams}`)
-                setCurrentChat(chats[0])
-            }
-        }
-    }, [chatIdParam, chats])
 
 
-    const getAllMessages = async () => {
-        const q = query(collection(db, "messages"), where("chatId", "==", chatId(currentChat.uid)), orderBy("timeStamp", "asc"));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const messages = [];
-            querySnapshot.forEach((doc) => {
-                messages.push({
-                    ...doc.data(),
-                    id: doc.id,
-                    direction: doc.data().sender === user.uid ? "outgoing" : "incoming"
-                })
-            });
-            setChatMessages(messages)
-        });
-    }
+    // useEffect(() => {
+    //     if (chats.length) {
+    //         const currentChatIndex = chats.findIndex(v => v.id === chatIdParam);
+    //         if (currentChatIndex !== -1) {
+    //             searchParams.set("chatId", chats[currentChatIndex].id)
+    //             navigate(`/chat?${searchParams}`)
+    //             setCurrentChat(chats[currentChatIndex])
+    //         } else {
+    //             searchParams.set("chatId", chats[0].id)
+    //             navigate(`/chat?${searchParams}`)
+    //             setCurrentChat(chats[0])
+    //         }
+    //     }
+    // }, [chatIdParam, chats])
 
-    useEffect(() => {
-        getAllMessages()
-    }, [currentChat])
+
+    // const getAllMessages = async () => {
+    //     const q = query(collection(db, "messages"), where("chatId", "==", chatId(currentChat.uid)), orderBy("timeStamp", "asc"));
+    //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    //         const messages = [];
+    //         querySnapshot.forEach((doc) => {
+    //             messages.push({
+    //                 ...doc.data(),
+    //                 id: doc.id,
+    //                 direction: doc.data().sender === user.uid ? "outgoing" : "incoming"
+    //             })
+    //         });
+    //         setChatMessages(messages)
+    //     });
+    // }
+
+    // useEffect(() => {
+    //     getAllMessages()
+    // }, [currentChat])
 
     useEffect(() => {
         if (sidebarVisible) {
@@ -192,7 +190,7 @@ function ChatApp() {
         }
     }, [sidebarVisible, setSidebarVisible, setConversationContentStyle, setConversationAvatarStyle, setSidebarStyle, setChatContainerStyle]);
 
-    const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
+    // const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
 
     return (
         <MainContainer
@@ -222,20 +220,16 @@ function ChatApp() {
                 <ConversationList>
                     {chats.map((v) => {
                         return (
-                            <Conversation style={{ backgroundColor: searchParams.get("chatId") === v.id ? "#c6e3fa" : "" }} key={v.id} onClick={
-                                () => {
-                                    handleConversationClick()
-                                    setCurrentChat(v)
-                                    searchParams.set("chatId", v.id)
-                                    navigate(`/chat?${searchParams}`)
-                                    // info = "Yes i can do it for you"
-                                    // lastSenderName = "Lilly"
-                                    // name = "Lilly"
-                                }
-                            }>
+                            <Conversation key={v.id} onClick={handleConversationClick}>
+                                <Conversation.Content
+                                    info="Yes i can do it for you"
+                                    lastSenderName={v.username}
+                                    name={v.username}
+                                />
+
                                 <Avatar
-                                    name="Lilly"
-                                    src="https://ui-avatars.com/api/?name=Lilly&background=random"
+                                    name={v.username}
+                                    src={`https://ui-avatars.com/api/?name=${v.username}&background=random`}
                                     status="available"
                                 />
                             </Conversation>
@@ -263,8 +257,8 @@ function ChatApp() {
                     </ConversationHeader.Actions>
                 </ConversationHeader>
 
-                <MessageList typingIndicator={isTyping ? <TypingIndicator content={currentChat.full_name} /> : false}>
-
+                {/* <MessageList typingIndicator={isTyping ? <TypingIndicator content={currentChat.full_name} /> : false}> */}
+                <MessageList>
                     <MessageSeparator content="Saturday, 30 November 2019" />
                     {chatMessages.map((v, i) => (
                         <Message key={i} model={v}>
