@@ -45,16 +45,21 @@ function ChatApp() {
     //     return id
     // }
 
-    const onSend = async () => {
-        setMessageInputValue("")
-        await addDoc(collection(db, "messages"), {
-            message: messageInputValue,
+    const onSend = () => {
+        setChatMessages([...chatMessages,
+        {
+            chatMessages: messageInputValue,
             sentTime: new Date().toISOString(),
             sender: user.uid,
             receiver: currentChat.uid,
-            // chatId: chatId(currentChat.uid),
-            timeStamp: serverTimestamp()
-        });
+        }
+        ])
+
+        // setMessageInputValue("")
+        // await addDoc(collection(db, "messages"), {
+        //     // chatId: chatId(currentChat.uid),
+        //     timeStamp: serverTimestamp()
+        // });
         // await updateDoc(doc(db, "users", currentChat.uid), {
         //     [`lastMessages.${chatId(currentChat.uid)}`]: {
         //         lastMessage: messageInputValue,
@@ -78,19 +83,30 @@ function ChatApp() {
     }, [sidebarVisible, setSidebarVisible])
 
     const getAllUsers = async () => {
-        const q = query(collection(db, "users"), where("email", "!=", user.email));
-        const querySnapshot = await getDocs(q);
-        const users = [];
-        querySnapshot.forEach((doc) => {
-            users.push({ ...doc.data(), id: doc.id })
-            console.log(doc.id, "=>", doc.data());
-        });
-        setChats(users)
-    }
+        if (!user || !user.email) {
+            // console.error("User or user email is undefined");
+            return;
+        }
+
+        try {
+            const q = query(collection(db, "users"), where("email", "!=", user.email));
+            const querySnapshot = await getDocs(q);
+            const users = [];
+            querySnapshot.forEach((doc) => {
+                users.push({ ...doc.data(), id: doc.id });
+                console.log(doc.id, "=>", doc.data());
+            });
+            setCurrentChat(users[0])
+            setChats(users);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
 
     useEffect(() => {
-        getAllUsers()
-    }, [])
+        getAllUsers();
+    }, [user]);
+
 
     // const setTyping = async (typing) => {
 
@@ -196,7 +212,7 @@ function ChatApp() {
         <MainContainer
             responsive
             style={{
-                height: '100vh'
+                height: '97vh'
             }}
         >
             <Sidebar
@@ -218,24 +234,24 @@ function ChatApp() {
                 <Search placeholder="Search..." />
 
                 <ConversationList>
-                    {chats.map((v) => {
-                        return (
-                            <Conversation key={v.id} onClick={handleConversationClick}>
-                                <Conversation.Content
-                                    info="Yes i can do it for you"
-                                    lastSenderName={v.username}
-                                    name={v.username}
-                                />
+                    {chats.map((v) => (
+                        <Conversation key={v.id} onClick={() => {
+                            handleConversationClick()
+                            setCurrentChat(v)
+                        }}>
+                            <Conversation.Content
+                                info="Yes i can do it for you"
+                                lastSenderName={v.username}
+                                name={v.username}
+                            />
 
-                                <Avatar
-                                    name={v.username}
-                                    src={`https://ui-avatars.com/api/?name=${v.username}&background=random`}
-                                    status="available"
-                                />
-                            </Conversation>
-                        )
-                    }
-                    )}
+                            <Avatar
+                                name={v.username}
+                                src={`https://ui-avatars.com/api/?name=${v.username}&background=random`}
+                            // status="available"
+                            />
+                        </Conversation>
+                    ))}
                 </ConversationList>
 
             </Sidebar>
@@ -243,12 +259,12 @@ function ChatApp() {
                 <ConversationHeader>
                     <ConversationHeader.Back onClick={handleBackClick} />
                     <Avatar
-                        name="Zoe"
-                        src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
+                        name={currentChat.username}
+                        src={`https://ui-avatars.com/api/?name=${currentChat.username}&background=random`}
                     />
                     <ConversationHeader.Content
                         info="Active 10 mins ago"
-                        userName={user.username}
+                        userName={currentChat.username}
                     />
                     <ConversationHeader.Actions>
                         {/* <VoiceCallButton /> */}
