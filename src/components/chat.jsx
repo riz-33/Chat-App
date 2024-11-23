@@ -45,13 +45,29 @@ function ChatApp() {
     //     return id
     // }
 
-    const onSend = () => {
-        setChatMessages([...chatMessages,
-        {
-            chatMessages: messageInputValue,
+    const onSend = async () => {
+        let chatId = "";
+        if (user.uid<currentChat.uid){
+            chatId = `${user.uid}${currentChat.uid}`
+        }
+        else{
+            chatId = `${currentChat.uid}${user.uid}`
+        }
+        await addDoc(collection(db, "messages"), {
+            message: messageInputValue,
             sentTime: new Date().toISOString(),
             sender: user.uid,
             receiver: currentChat.uid,
+            senderName: user.username,
+            receiverName: currentChat.username
+            
+        });
+        setChatMessages([...chatMessages,
+        {
+            
+            sender: "Zoe",
+            direction: "outgoing",
+            position: "first"
         }
         ])
 
@@ -72,6 +88,7 @@ function ChatApp() {
         //         chatId: chatId(currentChat.uid)
         //     }
         // });
+        setMessageInputValue("")
     }
 
     const handleBackClick = () => setSidebarVisible(!sidebarVisible);
@@ -304,7 +321,7 @@ function ChatApp() {
                     >
                         <Avatar
                             name="Zoe"
-                            src={`https://ui-avatars.com/api/?name=Patrick&background=random`}
+                            src={`https://ui-avatars.com/api/?name=${currentChat.username}&background=random`}
                         />
                     </Message>
 
