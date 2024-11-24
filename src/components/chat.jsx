@@ -11,7 +11,6 @@ import User from '../context/user';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
     db, addDoc, doc, collection, serverTimestamp, updateDoc, onSnapshot, query, orderBy, getDocs, getDoc, where
-
 } from '../config/firebase';
 import { formatDistance } from 'date-fns';
 
@@ -45,31 +44,33 @@ function ChatApp() {
     //     return id
     // }
 
+    const chatId = () => {
+        let id = "";
+        if (user.uid < currentChat.uid) {
+            id = `${user.uid}${currentChat.uid}`
+        }
+        else {
+            id = `${currentChat.uid}${user.uid}`
+        }
+        return id;
+    }
+
     const onSend = async () => {
-        let chatId = "";
-        if (user.uid<currentChat.uid){
-            chatId = `${user.uid}${currentChat.uid}`
-        }
-        else{
-            chatId = `${currentChat.uid}${user.uid}`
-        }
+        setMessageInputValue("")
         await addDoc(collection(db, "messages"), {
             message: messageInputValue,
             sentTime: new Date().toISOString(),
             sender: user.uid,
             receiver: currentChat.uid,
             senderName: user.username,
-            receiverName: currentChat.username
-            
+            receiverName: currentChat.username,
+            chatId: chatId(),
+            timeStamp: serverTimestamp()
         });
-        setChatMessages([...chatMessages,
-        {
-            
-            sender: "Zoe",
-            direction: "outgoing",
-            position: "first"
-        }
-        ])
+
+        await updateDoc(doc(db, "users", user.uid), {
+            lastMessage:messageInputValue
+        });
 
         // setMessageInputValue("")
         // await addDoc(collection(db, "messages"), {
@@ -88,7 +89,6 @@ function ChatApp() {
         //         chatId: chatId(currentChat.uid)
         //     }
         // });
-        setMessageInputValue("")
     }
 
     const handleBackClick = () => setSidebarVisible(!sidebarVisible);
@@ -113,6 +113,8 @@ function ChatApp() {
                 users.push({ ...doc.data(), id: doc.id });
                 console.log(doc.id, "=>", doc.data());
             });
+            searchParams.set("chatId", users[0].id)
+            navigate(`/chatapp?${searchParams}`)
             setCurrentChat(users[0])
             setChats(users);
         } catch (error) {
@@ -179,24 +181,24 @@ function ChatApp() {
     // }, [chatIdParam, chats])
 
 
-    // const getAllMessages = async () => {
-    //     const q = query(collection(db, "messages"), where("chatId", "==", chatId(currentChat.uid)), orderBy("timeStamp", "asc"));
-    //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    //         const messages = [];
-    //         querySnapshot.forEach((doc) => {
-    //             messages.push({
-    //                 ...doc.data(),
-    //                 id: doc.id,
-    //                 direction: doc.data().sender === user.uid ? "outgoing" : "incoming"
-    //             })
-    //         });
-    //         setChatMessages(messages)
-    //     });
-    // }
+    const getAllMessages = async () => {
+        const q = query(collection(db, "messages"), where("chatId", "==", chatId(currentChat.uid)), orderBy("timeStamp", "asc"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const messages = [];
+            querySnapshot.forEach((doc) => {
+                messages.push({
+                    ...doc.data(),
+                    id: doc.id,
+                    direction: doc.data().sender === user.uid ? "outgoing" : "incoming"
+                })
+            });
+            setChatMessages(messages)
+        });
+    }
 
-    // useEffect(() => {
-    //     getAllMessages()
-    // }, [currentChat])
+    useEffect(() => {
+        getAllMessages()
+    }, [currentChat])
 
     useEffect(() => {
         if (sidebarVisible) {
@@ -252,13 +254,15 @@ function ChatApp() {
 
                 <ConversationList>
                     {chats.map((v) => (
-                        <Conversation key={v.id} onClick={() => {
+                        <Conversation style={{ backgroundColor: searchParams.get("chatId") === v.id ? "#c6e3fa" : "" }} key={v.id} onClick={() => {
                             handleConversationClick()
                             setCurrentChat(v)
+                            searchParams.set("chatId", v.id)
+                            navigate(`/chatapp?${searchParams}`)
                         }}>
                             <Conversation.Content
-                                info="Yes i can do it for you"
-                                lastSenderName={v.username}
+                                 info={v?.lastMessages?.[chatId(v.id)]?.lastMessage || ""}
+                                // lastSenderName={v.username}
                                 name={v.username}
                             />
 
@@ -295,13 +299,6 @@ function ChatApp() {
                     <MessageSeparator content="Saturday, 30 November 2019" />
                     {chatMessages.map((v, i) => (
                         <Message key={i} model={v}>
-                            model={{
-                                direction: 'outgoing',
-                                message: 'Hello my friend',
-                                position: 'single',
-                                sender: 'Zoe',
-                                sentTime: '15 mins ago'
-                            }}
                             <Avatar
                                 name="Zoe"
                                 src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
@@ -309,46 +306,6 @@ function ChatApp() {
                             <Message.Footer sentTime={formatDistance(new Date(v.sentTime), new Date(), { addSuffix: true })} />
                         </Message>
                     ))}
-
-                    <Message
-                        model={{
-                            direction: 'incoming',
-                            message: 'Hello my friend',
-                            position: 'last',
-                            sender: 'Patrik',
-                            sentTime: '15 mins ago'
-                        }}
-                    >
-                        <Avatar
-                            name="Zoe"
-                            src={`https://ui-avatars.com/api/?name=${currentChat.username}&background=random`}
-                        />
-                    </Message>
-
-                    <Message
-                        avatarSpacer
-                        model={{
-                            direction: 'outgoing',
-                            message: 'Hello my friend',
-                            position: 'first',
-                            sender: 'Zoe',
-                            sentTime: '15 mins ago'
-                        }}
-                    />
-                    <Message
-                        model={{
-                            direction: 'outgoing',
-                            message: 'Hello my friend',
-                            position: 'last',
-                            sender: 'Zoe',
-                            sentTime: '15 mins ago'
-                        }}
-                    >
-                        <Avatar
-                            name="Zoe"
-                            src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
-                        />
-                    </Message>
                 </MessageList>
 
                 <MessageInput placeholder="Type message here" value={messageInputValue} onChange={val => setMessageInputValue(val)} onSend={onSend} />
