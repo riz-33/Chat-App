@@ -13,6 +13,7 @@ import {
     db, addDoc, doc, collection, serverTimestamp, updateDoc, onSnapshot, query, orderBy, getDocs, getDoc, where
 } from '../config/firebase';
 import { formatDistance } from 'date-fns';
+import { useDebounce } from 'use-debounce'
 
 function ChatApp() {
     const [messageInputValue, setMessageInputValue] = useState("")
@@ -27,22 +28,12 @@ function ChatApp() {
     const [searchParams, setSearchParams] = useSearchParams()
     const navigate = useNavigate()
     const chatIdParam = searchParams.get('chatId');
-    // const [value] = useDebounce(messageInputValue, 2000);
+    const [value] = useDebounce(messageInputValue, 2000);
     const user = useContext(User).user
 
     const logOut = () => {
         signOut(auth)
     }
-
-    // const chatId = (currentId) => {
-    //     let id = "";
-    //     if (user.uid < currentId) {
-    //         id = `${user.uid}${currentId}`
-    //     } else {
-    //         id = `${currentId}${user.uid}`
-    //     }
-    //     return id
-    // }
 
     const chatId = () => {
         let id = "";
@@ -69,7 +60,7 @@ function ChatApp() {
         });
 
         await updateDoc(doc(db, "users", user.uid), {
-            lastMessage:messageInputValue
+            lastMessage: messageInputValue
         });
 
         // setMessageInputValue("")
@@ -101,7 +92,6 @@ function ChatApp() {
 
     const getAllUsers = async () => {
         if (!user || !user.email) {
-            // console.error("User or user email is undefined");
             return;
         }
 
@@ -128,16 +118,14 @@ function ChatApp() {
 
 
     // const setTyping = async (typing) => {
-
     //     const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[user.uid];
     //     console.log("isTyping", isTyping)
-
     //     if (!isTyping && typing) {
     //         console.log("api call")
     //         await updateDoc(doc(db, "users", currentChat.uid), {
     //             [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
     //         });
-    //         await updateDoc(doc(db, "users", user.uid), {
+    //         await updateDoc(doc(db, "users", user.uid),  {
     //             [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
     //         });
     //     }
@@ -161,9 +149,6 @@ function ChatApp() {
     //         setTyping(false)
     //     }
     // }, [messageInputValue, value])
-
-
-
 
     // useEffect(() => {
     //     if (chats.length) {
@@ -261,7 +246,7 @@ function ChatApp() {
                             navigate(`/chatapp?${searchParams}`)
                         }}>
                             <Conversation.Content
-                                 info={v?.lastMessages?.[chatId(v.id)]?.lastMessage || ""}
+                                info={v?.lastMessages?.[chatId(v.id)]?.lastMessage || ""}
                                 // lastSenderName={v.username}
                                 name={v.username}
                             />
@@ -301,9 +286,10 @@ function ChatApp() {
                         <Message key={i} model={v}>
                             <Avatar
                                 name="Zoe"
-                                src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
+                                src={`https://ui-avatars.com/api/?name=${user.uid === v.sender ? user.username :
+                                    currentChat?.username}&background=random`}
                             />
-                            <Message.Footer sentTime={formatDistance(new Date(v.sentTime), new Date(), { addSuffix: true })} />
+                            {/* <Message.Footer sentTime={formatDistance(new Date(v.sentTime), new Date(), { addSuffix: true })} /> */}
                         </Message>
                     ))}
                 </MessageList>
