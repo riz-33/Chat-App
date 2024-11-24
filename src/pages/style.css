@@ -1,0 +1,7 @@
+.cs-message--outgoing .cs-message__sender-name {
+    display: block !important;
+}
+
+.cs-message--outgoing .cs-message__sent-time {
+    display: block !important;
+}

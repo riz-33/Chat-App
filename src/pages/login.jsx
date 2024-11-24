@@ -7,6 +7,7 @@ import { db, doc, getDoc } from '../config/firebase';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { FcGoogle } from "react-icons/fc";
+import "./style.css"
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
