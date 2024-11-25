@@ -3,16 +3,16 @@ import {
     Avatar, ConversationHeader, MessageSeparator, MainContainer, Sidebar, Conversation, ConversationList,
     Search, EllipsisButton
 } from '@chatscope/chat-ui-kit-react';
-import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import { signOut, auth } from '../config/firebase';
-import { TbLogout2 } from "react-icons/tb";
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { useCallback, useEffect, useContext, useState, } from 'react';
-import User from '../context/user';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import {
-    db, addDoc, doc, collection, serverTimestamp, updateDoc, onSnapshot, query, orderBy, getDocs, getDoc, where
-} from '../config/firebase';
 import { formatDistance } from 'date-fns';
+import { TbLogout2 } from "react-icons/tb";
+import {
+    db, addDoc, doc, collection, serverTimestamp, updateDoc, onSnapshot, query, orderBy, getDocs, getDoc, where,
+    signOut, auth
+} from '../config/firebase';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import User from '../context/user';
 import { useDebounce } from 'use-debounce'
 
 function ChatApp() {
@@ -25,11 +25,11 @@ function ChatApp() {
     const [chats, setChats] = useState([])
     const [chatMessages, setChatMessages] = useState([])
     const [currentChat, setCurrentChat] = useState({})
+    const user = useContext(User).user
     const [searchParams, setSearchParams] = useSearchParams()
     const navigate = useNavigate()
     const chatIdParam = searchParams.get('chatId');
     const [value] = useDebounce(messageInputValue, 2000);
-    const user = useContext(User).user
 
     const logOut = () => {
         signOut(auth)
@@ -117,6 +117,39 @@ function ChatApp() {
     }, [user]);
 
 
+    const setTyping = async (typing) => {
+        if (!currentChat || !user) {
+            console.error("currentChat or user is undefined");
+            return;
+        }
+
+        const chatIdValue = chatId(currentChat.uid);
+        if (!chatIdValue) {
+            console.error("Invalid chatId value:", chatIdValue);
+            return;
+        }
+
+        const typingPath = `isTyping.${chatIdValue}.${user.uid}`;
+        try {
+            await updateDoc(doc(db, "users", currentChat.uid), { [typingPath]: typing });
+            await updateDoc(doc(db, "users", user.uid), { [typingPath]: typing });
+        } catch (error) {
+            console.error("Failed to update typing status:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (!currentChat || !user) return;
+
+        const isTyping = messageInputValue && messageInputValue !== value;
+        const debounce = setTimeout(() => {
+            setTyping(isTyping);
+        }, 2000);
+
+        return () => clearTimeout(debounce);
+    }, [messageInputValue, value]);
+
+
     // const setTyping = async (typing) => {
     //     const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[user.uid];
     //     console.log("isTyping", isTyping)
@@ -132,11 +165,11 @@ function ChatApp() {
     //     if (!typing) {
     //         await updateDoc(doc(db, "users", currentChat.uid), {
     //             [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
-    //         }); await updateDoc(doc(db, "users", user.uid), {
+    //         });
+    //         await updateDoc(doc(db, "users", user.uid), {
     //             [`isTyping.${chatId(currentChat.uid)}.${user.uid}`]: typing
     //         });
     //     }
-
     // }
 
     // useEffect(() => {
@@ -210,8 +243,9 @@ function ChatApp() {
         }
     }, [sidebarVisible, setSidebarVisible, setConversationContentStyle, setConversationAvatarStyle, setSidebarStyle, setChatContainerStyle]);
 
-    // const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
-
+    const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
+    console.log(isTyping)
+    
     return (
         <MainContainer
             responsive
@@ -279,8 +313,10 @@ function ChatApp() {
                     </ConversationHeader.Actions>
                 </ConversationHeader>
 
-                {/* <MessageList typingIndicator={isTyping ? <TypingIndicator content={currentChat.full_name} /> : false}> */}
-                <MessageList>
+                <MessageList typingIndicator={
+                    !isTyping ?
+                    <TypingIndicator content="Zoe is typing" /> : false}>
+                    {/* <MessageList> */}
                     <MessageSeparator content="Saturday, 30 November 2019" />
                     {chatMessages.map((v, i) => (
                         <Message key={i} model={v}>
