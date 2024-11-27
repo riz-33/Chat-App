@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Divider, Stack, TextField, Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { auth, signInWithEmailAndPassword } from "../config/firebase";
+import {
+    db, doc, getDoc, auth, signInWithEmailAndPassword, signInWithPopup, googleProvider
+} from "../config/firebase";
 import { useForm } from "react-hook-form"
-import { db, doc, getDoc } from '../config/firebase';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { FcGoogle } from "react-icons/fc";
@@ -50,80 +51,102 @@ const LoginContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const LoginForm = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    const onSubmit = (data) => {
-        signInWithEmailAndPassword(auth, data.email, data.password)
-            .then(async (response) => {
-                const docRef = doc(db, "users", response.user.uid);
-                const docSnap = await getDoc(docRef);
+    const onSubmit = async (data) => {
+        try {
+            const response = await signInWithEmailAndPassword(auth, data.email, data.password);
+            const docRef = doc(db, "users", response.user.uid);
+            const docSnap = await getDoc(docRef);
 
-                if (docSnap.exists()) {
-                    console.log("Document data:", docSnap.data());
-                } else {
-                    console.log("No such document!");
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            });
-        console.log(data)
+            if (docSnap.exists()) {
+                console.log("Document data:", docSnap.data());
+            } else {
+                console.log("No such document!");
+            }
+            console.log("User logged in:", response.user);
+            reset();
+        } catch (error) {
+            console.error("Error during login:", error);
+        }
+    };
+
+    const googleLogin = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            // const user = result.user;
+            const docRef = doc(db, "users", result.user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                console.log("Document data:", docSnap.data());
+            } else {
+                console.log("No such document!");
+            }
+
+            // await setDoc(doc(db, "users", user.uid), {
+            //     username: user.displayName,
+            //     email: user.email,
+            //     uid: user.uid
+            // });
+            console.log("Google user signed in", result.user);
+        } catch (error) {
+            console.error("Error during Google login:", error);
+        }
     };
 
     return (
         <LoginContainer direction="column" justifyContent="space-between" component="main" maxWidth="xs">
-            <Card variant='outlined' >
-                <Typography variant="h4" align="center" gutterBottom fontFamily='Helvetica Neue'>
-                    Sign In
+            <Card variant="outlined">
+                <Typography variant="h4" align="center" gutterBottom fontFamily="Helvetica Neue">
+                    Login
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                {...register("email")}
+                                {...register("email", { required: "Email is required" })}
                                 label="Email"
                                 type="email"
                                 fullWidth
                                 variant="outlined"
-                                color='warning'
-                                required
+                                color="warning"
+                                error={!!errors.email}
+                                helperText={errors.email?.message}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                {...register("password")}
+                                {...register("password", { required: "Password is required" })}
                                 label="Password"
                                 type="password"
                                 fullWidth
                                 variant="outlined"
-                                color='warning'
-                                required
+                                color="warning"
+                                error={!!errors.password}
+                                helperText={errors.password?.message}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <Button type="submit" fullWidth variant="contained" color="primary">
-                                Sign In
+                                Login
                             </Button>
                         </Grid>
                     </Grid>
                     <Divider>
-                        <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+                        <Typography sx={{ color: "text.secondary" }}>or</Typography>
                     </Divider>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                         <Button
                             fullWidth
                             variant="outlined"
-                            onClick={() => alert('Sign in with Google')}
+                            onClick={googleLogin}
                             startIcon={<FcGoogle />}
                         >
                             Sign in with Google
                         </Button>
-                        <Typography sx={{ textAlign: 'center' }}>
-                            Don't have an account?{' '}
+                        <Typography sx={{ textAlign: "center" }}>
+                            Already have an account?{" "}
                             <Link to={"/signup"}>
                                 Sign up
                             </Link>

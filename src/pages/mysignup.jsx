@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Divider, Stack, TextField, Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { auth, createUserWithEmailAndPassword } from "../config/firebase";
+import {
+    auth, createUserWithEmailAndPassword, signInWithPopup, googleProvider, db, doc, setDoc
+} from "../config/firebase";
 import { useForm } from "react-hook-form"
-import { db, doc, setDoc } from '../config/firebase';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { FcGoogle } from "react-icons/fc";
@@ -49,63 +50,76 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const SignupForm = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-    const onSubmit = (data) => {
-        createUserWithEmailAndPassword(auth, data.email, data.password)
-            .then(async (response) => {
-                // console.log(response, "user")
-                await setDoc(doc(db, "users", response.user.uid), {...data, uid: response.user.uid});
-            })
-            .catch((error) => {
-                console.log(error)
+    const onSubmit = async (data) => {
+        try {
+            const response = await createUserWithEmailAndPassword(auth, data.email, data.password);
+            await setDoc(doc(db, "users", response.user.uid), { ...data, uid: response.user.uid });
+            console.log("User registered and saved to Firestore:", response.user);
+            reset();
+        } catch (error) {
+            console.error("Error during email/password signup:", error);
+        }
+    };
+
+    const googleSignup = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+
+            await setDoc(doc(db, "users", user.uid), {
+                username: user.displayName,
+                email: user.email,
+                uid: user.uid
             });
-        console.log(data)
-    }
+            console.log("Google user signed in and saved to Firestore:", user);
+        } catch (error) {
+            console.error("Error during Google signup:", error);
+        }
+    };
 
     return (
         <SignUpContainer direction="column" justifyContent="space-between" component="main" maxWidth="xs">
-            <Card variant='outlined' >
-                <Typography variant="h4" align="center" gutterBottom fontFamily='Helvetica Neue'>
+            <Card variant="outlined">
+                <Typography variant="h4" align="center" gutterBottom fontFamily="Helvetica Neue">
                     Sign Up
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                {...register("username")}
+                                {...register("username", { required: "Username is required" })}
                                 label="Username"
-                                type="name"
                                 fullWidth
                                 variant="outlined"
-                                color='warning'
-                                required
+                                color="warning"
+                                error={!!errors.username}
+                                helperText={errors.username?.message}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                {...register("email")}
+                                {...register("email", { required: "Email is required" })}
                                 label="Email"
                                 type="email"
                                 fullWidth
                                 variant="outlined"
-                                color='warning'
-                                required
+                                color="warning"
+                                error={!!errors.email}
+                                helperText={errors.email?.message}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                {...register("password")}
+                                {...register("password", { required: "Password is required" })}
                                 label="Password"
                                 type="password"
                                 fullWidth
                                 variant="outlined"
-                                color='warning'
-                                required
+                                color="warning"
+                                error={!!errors.password}
+                                helperText={errors.password?.message}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -115,19 +129,19 @@ const SignupForm = () => {
                         </Grid>
                     </Grid>
                     <Divider>
-                        <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+                        <Typography sx={{ color: "text.secondary" }}>or</Typography>
                     </Divider>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                         <Button
                             fullWidth
                             variant="outlined"
-                            onClick={() => alert('Sign up with Google')}
+                            onClick={googleSignup}
                             startIcon={<FcGoogle />}
                         >
                             Sign up with Google
                         </Button>
-                        <Typography sx={{ textAlign: 'center' }}>
-                            Already have an account?{' '}
+                        <Typography sx={{ textAlign: "center" }}>
+                            Already have an account?{" "}
                             <Link to={"/"}>
                                 Sign in
                             </Link>
