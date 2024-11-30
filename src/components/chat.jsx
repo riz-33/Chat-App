@@ -245,7 +245,7 @@ function ChatApp() {
 
     const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
     console.log(isTyping)
-    
+
     return (
         <MainContainer
             responsive
@@ -259,7 +259,9 @@ function ChatApp() {
                 <ConversationHeader>
                     <Avatar
                         name={"Zoe"}
-                        src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
+                        src={user.photo || user.photo !== null ? user.photo :
+                            `https://ui-avatars.com/api/?name=${user.username}&background=random`}
+                    // src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
                     />
                     <ConversationHeader.Content
                         userName={user.username}
@@ -287,7 +289,9 @@ function ChatApp() {
 
                             <Avatar
                                 name={v.username}
-                                src={`https://ui-avatars.com/api/?name=${v.username}&background=random`}
+                                src={v.photo || v.photo !== null ? v.photo :
+                                    `https://ui-avatars.com/api/?name=${v.username}&background=random`}
+                            // src={`https://ui-avatars.com/api/?name=${v.username}&background=random`}
                             // status="available"
                             />
                         </Conversation>
@@ -300,7 +304,9 @@ function ChatApp() {
                     <ConversationHeader.Back onClick={handleBackClick} />
                     <Avatar
                         name={currentChat.username}
-                        src={`https://ui-avatars.com/api/?name=${currentChat.username}&background=random`}
+                        src={currentChat.photo || currentChat.photo !== null ? currentChat.photo :
+                            `https://ui-avatars.com/api/?name=${currentChat.username}&background=random`}
+                    // src={`https://ui-avatars.com/api/?name=${currentChat.username}&background=random`}
                     />
                     <ConversationHeader.Content
                         info="Active 10 mins ago"
@@ -315,16 +321,16 @@ function ChatApp() {
 
                 <MessageList typingIndicator={
                     !isTyping ?
-                    <TypingIndicator content="Zoe is typing" /> : false}>
+                        <TypingIndicator content="Zoe is typing" /> : false}>
                     {/* <MessageList> */}
                     <MessageSeparator content="Saturday, 30 November 2019" />
                     {chatMessages.map((v, i) => (
                         <Message key={i} model={v}>
-                            <Avatar
-                                name="Zoe"
-                                src={`https://ui-avatars.com/api/?name=${user.uid === v.sender ? user.username :
-                                    currentChat?.username}&background=random`}
-                            />
+                            {/* <Avatar */}
+                            {/* name="Zoe" */}
+                            {/* src={`https://ui-avatars.com/api/?name=${user.uid === v.sender ? user.username : */}
+                            {/* currentChat?.username}&background=random`} */}
+                            {/* /> */}
                             {/* <Message.Footer sentTime={formatDistance(new Date(v.sentTime), new Date(), { addSuffix: true })} /> */}
                         </Message>
                     ))}

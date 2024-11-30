@@ -2,13 +2,16 @@ import React from 'react';
 import { Box, Divider, Stack, TextField, Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import {
-    db, doc, getDoc, auth, signInWithEmailAndPassword, signInWithPopup, googleProvider
+    db, doc, getDoc, auth, signInWithEmailAndPassword, signInWithPopup, googleProvider, GoogleAuthProvider,
+    setDoc, serverTimestamp
 } from "../config/firebase";
 import { useForm } from "react-hook-form"
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { FcGoogle } from "react-icons/fc";
 import "./style.css"
+import { useNavigate } from 'react-router-dom';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -71,29 +74,43 @@ const LoginForm = () => {
         }
     };
 
+    const navigate = useNavigate();
     const googleLogin = async () => {
         try {
-            const result = await signInWithPopup(auth, googleProvider);
-            // const user = result.user;
-            const docRef = doc(db, "users", result.user.uid);
+            const response = await signInWithPopup(auth, googleProvider);
+            const user = response.user;
+            const docRef = doc(db, "users", user.uid);
             const docSnap = await getDoc(docRef);
 
-            if (docSnap.exists()) {
-                console.log("Document data:", docSnap.data());
+            if (!docSnap.exists()) {
+                await setDoc(doc(db, "users", user.uid), {
+                    username: user.displayName,
+                    email: user.email,
+                    number: user.phoneNumber,
+                    photo: user.photoURL,
+                    uid: user.uid,
+                    createdAt: serverTimestamp()
+                });
+                console.log("New user added to Firestore.");
             } else {
-                console.log("No such document!");
+                console.log("Existing user data:", docSnap.data());
             }
-
-            // await setDoc(doc(db, "users", user.uid), {
-            //     username: user.displayName,
-            //     email: user.email,
-            //     uid: user.uid
-            // });
-            console.log("Google user signed in", result.user);
+            console.log("User logged in:", response.user);
+            setTimeout(() => navigate('/chatapp'), 0);
         } catch (error) {
-            console.error("Error during Google login:", error);
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            const email = error.customData?.email;
+            const credential = GoogleAuthProvider.credentialFromError(error);
+
+            if (errorCode === "auth/popup-closed-by-user") {
+                console.error("Login popup was closed by the user.");
+            } else {
+                console.error("Error during login:", errorMessage);
+            }
         }
     };
+
 
     return (
         <LoginContainer direction="column" justifyContent="space-between" component="main" maxWidth="xs">

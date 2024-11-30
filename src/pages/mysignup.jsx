@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Divider, Stack, TextField, Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import {
-    auth, createUserWithEmailAndPassword, signInWithPopup, googleProvider, db, doc, setDoc
+    auth, createUserWithEmailAndPassword, signInWithPopup, googleProvider, db, doc, setDoc, serverTimestamp
 } from "../config/firebase";
 import { useForm } from "react-hook-form"
 import MuiCard from '@mui/material/Card';
@@ -55,7 +55,15 @@ const SignupForm = () => {
     const onSubmit = async (data) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, data.email, data.password);
-            await setDoc(doc(db, "users", response.user.uid), { ...data, uid: response.user.uid });
+            await setDoc(doc(db, "users", response.user.uid), {
+                username: data.username,
+                email: data.email,
+                password: data.password,
+                number: response.user.phoneNumber,
+                photo: response.user.photoURL,
+                uid: response.user.uid,
+                createdAt: serverTimestamp()
+             });
             console.log("User registered and saved to Firestore:", response.user);
             reset();
         } catch (error) {
@@ -71,12 +79,15 @@ const SignupForm = () => {
             await setDoc(doc(db, "users", user.uid), {
                 username: user.displayName,
                 email: user.email,
-                uid: user.uid
+                number: user.phoneNumber,
+                photo: user.photoURL,
+                uid: user.uid,
+                createdAt: serverTimestamp()
             });
             console.log("Google user signed in and saved to Firestore:", user);
         } catch (error) {
             console.error("Error during Google signup:", error);
-        }
+        }    
     };
 
     return (

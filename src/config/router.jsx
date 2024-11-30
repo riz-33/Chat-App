@@ -1,27 +1,32 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ChatPage from "../pages/chat";
-import { auth, onAuthStateChanged } from "./firebase";
+import LoginForm from "../pages/login";
+import SignupForm from "../pages/mysignup";
 import { useEffect, useState } from "react";
+import { auth, onAuthStateChanged, doc, getDoc, db } from "./firebase";
 import React from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
-import LoginForm from "../pages/login";
-import SignupForm from "../pages/mysignup";
 
 function AppRouter() {
     const [User, setUser] = useState(false)
     const [loader, setLoader] = useState(true)
 
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                setUser(true)
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setUser(true)
+                }
             } else {
                 setUser(false)
             }
             setLoader(false);
         })
     }, [])
+
     return (
         <>
             {loader ?
