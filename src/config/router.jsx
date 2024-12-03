@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ChatPage from "../pages/chat";
 import LoginForm from "../pages/login";
 import SignupForm from "../pages/mysignup";
+import ProfilePage from "../components/profile";
 import { useEffect, useState } from "react";
 import { auth, onAuthStateChanged, doc, getDoc, db } from "./firebase";
 import React from 'react';
@@ -39,6 +40,7 @@ function AppRouter() {
                         <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <LoginForm />} />
                         <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignupForm />} />
                         <Route path="/chatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} />
+                        <Route path="/profile" element={User ? <ProfilePage /> : <Navigate to={"/"} />} />
                     </Routes>
                 </BrowserRouter>
             }
