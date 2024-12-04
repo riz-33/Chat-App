@@ -50,12 +50,12 @@ function UpdateProfile() {
                     <MDBCol>
                         <MDBBreadcrumb className="bg-light rounded-3 p-3 mb-4">
                             <MDBBreadcrumbItem>
-                                <a href='#'>Home</a>
+                                <a href='chatapp'>Home</a>
                             </MDBBreadcrumbItem>
                             <MDBBreadcrumbItem>
-                                <a href="#">User</a>
+                                <a href="userprofile">My Profile</a>
                             </MDBBreadcrumbItem>
-                            <MDBBreadcrumbItem active>User Profile</MDBBreadcrumbItem>
+                            <MDBBreadcrumbItem active>Update Profile</MDBBreadcrumbItem>
                         </MDBBreadcrumb>
                     </MDBCol>
                 </MDBRow>
