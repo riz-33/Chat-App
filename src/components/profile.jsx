@@ -26,7 +26,7 @@ import * as mdb from 'mdb-ui-kit'; // lib
 window.mdb = mdb;
 
 
-function ProfilePage() {
+function UpdateProfile() {
     const getUser = async () => {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
@@ -290,7 +290,4 @@ function ProfilePage() {
     );
 }
 
-export default ProfilePage;
-
-
-
+export default UpdateProfile;

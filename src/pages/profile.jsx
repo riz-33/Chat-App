@@ -1,11 +1,11 @@
-import ProfilePage from "../components/profile";
+import UpdateProfile from "../components/profile";
 
-function ProfilePage() {
+function UpdateProfilePage() {
     return (
         <div>
-            <Profile />
+            <UpdateProfile />
         </div>
     );
 }
 
-export default ProfilePage;
+export default UpdateProfilePage;
