@@ -34,14 +34,13 @@ function ProfilePage() {
         if (docSnap.exists()) {
             console.log("Document data:", docSnap.data());
         } else {
-            // docSnap.data() will be undefined in this case
             console.log("No such document!");
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getUser();
-    },[]);
+    }, []);
 
     const user = useContext(User).user
     return (
@@ -66,17 +65,17 @@ function ProfilePage() {
                         <MDBCard className="mb-4">
                             <MDBCardBody className="text-center">
                                 <MDBCardImage
-                                // src={user.photo}
-                                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                    src={user.photo}
+                                    // src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
                                     alt="avatar"
-                                    className="rounded-circle"
+                                    className="rounded-circle mb-3"
                                     style={{ width: '150px' }}
                                     fluid />
-                                <p className="text-muted mb-1">Full Stack Developer</p>
-                                <p className="text-muted mb-4">Bay Area, San Francisco, CA</p>
+                                {/* <p className="text-muted mb-1">Full Stack Developer</p> */}
+                                {/* <p className="text-muted mb-4">Bay Area, San Francisco, CA</p> */}
                                 <div className="d-flex justify-content-center mb-2">
-                                    <MDBBtn>Follow</MDBBtn>
-                                    <MDBBtn outline className="ms-1">Message</MDBBtn>
+                                    <MDBBtn>Update Image</MDBBtn>
+                                    <MDBBtn outline className="ms-1">Update Profile</MDBBtn>
                                 </div>
                             </MDBCardBody>
                         </MDBCard>
@@ -84,25 +83,86 @@ function ProfilePage() {
                         <MDBCard className="mb-4 mb-lg-0">
                             <MDBCardBody className="p-0">
                                 <MDBListGroup flush className="rounded-3">
-                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
+                                    {/* <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                         <MDBIcon fas icon="globe fa-lg text-warning" />
                                         <MDBCardText>https://mdbootstrap.com</MDBCardText>
-                                    </MDBListGroupItem>
+                                    </MDBListGroupItem> */}
                                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                         <MDBIcon fab icon="github fa-lg" style={{ color: '#333333' }} />
-                                        <MDBCardText>mdbootstrap</MDBCardText>
+                                        <MDBCardText>
+                                        <a href="https://github.com/riz-33"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                riz-33
+                                            </a>
+                                        </MDBCardText>
                                     </MDBListGroupItem>
                                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                        <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
-                                        <MDBCardText>@mdbootstrap</MDBCardText>
+                                        <MDBIcon fab icon="whatsapp fa-lg" style={{ color: '#25D366' }} />
+                                        <MDBCardText>
+                                            <a href="https://wa.me/+923328293125"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                +923328293125
+                                            </a>
+                                        </MDBCardText>
                                     </MDBListGroupItem>
                                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                         <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
-                                        <MDBCardText>mdbootstrap</MDBCardText>
+                                        <MDBCardText>
+                                            <a href="https://www.instagram.com/rizwan.herre/"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                rizwan.herre
+                                            </a>
+                                        </MDBCardText>
                                     </MDBListGroupItem>
                                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                         <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
-                                        <MDBCardText>mdbootstrap</MDBCardText>
+                                        <MDBCardText>
+                                            <a href="https://www.facebook.com/muhammad.rizwan993"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                muhammad.rizwan993
+                                            </a>
+                                        </MDBCardText>
+                                    </MDBListGroupItem>
+                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
+                                        <MDBIcon fab icon="linkedin fa-lg" style={{ color: '#0077b5' }} />
+                                        <MDBCardText>
+                                        <a href="https://www.linkedin.com/in/muhammad-rizwan-quettawala-1a462b18b"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                in/muhammad-rizwan-quettawala-1a462b18b
+                                            </a>
+                                        </MDBCardText>
+                                    </MDBListGroupItem>
+                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
+                                        <MDBIcon fab icon="envelope fa-lg" style={{ color: '#D14836' }} />
+                                        <MDBCardText>
+                                            <a href="mailto:rizwan.quettawala@gmail.com"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                rizwan.quettawala@gmail.com
+                                            </a>
+                                        </MDBCardText>
+                                    </MDBListGroupItem>
+                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
+                                        <MDBIcon fab icon="youtube fa-lg" style={{ color: '#FF0000' }} />
+                                        <MDBCardText>
+                                        <a href="https://www.youtube.com/channel/UCXDqo26MM7IN_La4OdRBWxQ"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                channel/UCXDqo26MM7IN_La4OdRBWxQ
+                                            </a>
+                                        </MDBCardText>
                                     </MDBListGroupItem>
                                 </MDBListGroup>
                             </MDBCardBody>
@@ -116,7 +176,7 @@ function ProfilePage() {
                                         <MDBCardText>Full Name</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">Johnatan Smith</MDBCardText>
+                                        <MDBCardText className="text-muted">{user.username}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -125,28 +185,28 @@ function ProfilePage() {
                                         <MDBCardText>Email</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">example@example.com</MDBCardText>
+                                        <MDBCardText className="text-muted">{user.email}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
-                                <MDBRow>
+                                {/* <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Phone</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">(097) 234-5678</MDBCardText>
+                                        <MDBCardText className="text-muted">{user.number}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
-                                <hr />
+                                <hr /> */}
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Mobile</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">(098) 765-4321</MDBCardText>
+                                        <MDBCardText className="text-muted">{user.number}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
-                                <hr />
+                                {/* <hr />
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Address</MDBCardText>
@@ -154,7 +214,7 @@ function ProfilePage() {
                                     <MDBCol sm="9">
                                         <MDBCardText className="text-muted">Bay Area, San Francisco, CA</MDBCardText>
                                     </MDBCol>
-                                </MDBRow>
+                                </MDBRow> */}
                             </MDBCardBody>
                         </MDBCard>
 
