@@ -5,9 +5,10 @@ import {
 } from 'mdb-react-ui-kit';
 import { db, doc, getDoc } from '../config/firebase';
 import User from '../context/user';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
-function User2Profile() {
+function MyProfile() {
     const getUser = async () => {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
@@ -33,10 +34,10 @@ function User2Profile() {
                             <MDBBreadcrumbItem>
                                 <a href='chatapp'>Home</a>
                             </MDBBreadcrumbItem>
-                            <MDBBreadcrumbItem active>User Profile</MDBBreadcrumbItem>
-                            {/* <MDBBreadcrumbItem>
+                            <MDBBreadcrumbItem active>My Profile</MDBBreadcrumbItem>
+                            <MDBBreadcrumbItem>
                                 <a href="updateprofile">Update Profile</a>
-                            </MDBBreadcrumbItem> */}
+                            </MDBBreadcrumbItem>
                         </MDBBreadcrumb>
                     </MDBCol>
                 </MDBRow>
@@ -51,7 +52,11 @@ function User2Profile() {
                                         alt="Avatar" className="rounded-circle my-4" style={{ width: '100px' }} fluid />
                                     <MDBTypography tag="h5">{user.username}</MDBTypography>
                                     <MDBCardText>Web Designer</MDBCardText>
-                                    {/* <MDBIcon style={{ cursor: 'pointer' }} far icon="edit mb-5" /> */}
+                                    <MDBIcon
+                                        style={{ cursor: 'pointer' }}
+                                        far
+                                        icon="edit mb-5"
+                                    />
                                 </MDBCol>
                                 <MDBCol md="8">
                                     <MDBCardBody className="p-4">
@@ -82,25 +87,32 @@ function User2Profile() {
                                         </MDBRow>
 
                                         <div className="d-flex justify-content-start">
-                                            <a href={user.facebook} target='blank' rel="noopener noreferrer">
+                                            <a href={user.facebook ? user.facebook : "https://www.facebook.com/"}
+                                                target='blank' rel="noopener noreferrer">
                                                 <MDBIcon fab icon="facebook me-3 fa-lg" style={{ color: '#3b5998' }} />
                                             </a>
-                                            <a href="#!">
+                                            <a href={user.instagram ? user.instagram : "https://www.instagram.com"}
+                                                target='blank' rel='noopner noreferrer'>
                                                 <MDBIcon fab icon="instagram me-3 fa-lg" style={{ color: '#ac2bac' }} />
                                             </a>
-                                            <a href="#!">
+                                            <a href={user.github ? user.github : "https://www.github.com"}
+                                                target='blank' rel='noopner noreferrer'>
                                                 <MDBIcon fab icon="github me-3 fa-lg" style={{ color: '#333333' }} />
                                             </a>
-                                            <a href="#!">
+                                            <a href={user.whatsapp ? user.whatsapp : "https://www.whatsapp.com"}
+                                                target='blank' rel='noopner noreferrer'>
                                                 <MDBIcon fab icon="whatsapp me-3 fa-lg" style={{ color: '#25D366' }} />
                                             </a>
-                                            <a href="#!">
+                                            <a href={user.linkedin ? user.linkedin : "https://www.linkedin.com"}
+                                                target='blank' rel='noopner noreferrer'>
                                                 <MDBIcon fab icon="linkedin me-3 fa-lg" style={{ color: '#0077b5' }} />
                                             </a>
-                                            <a href="#!">
+                                            <a href={`mailto: ${user.email}`}
+                                                target='blank' rel='noopner noreferrer'>
                                                 <MDBIcon fab icon="envelope me-3 fa-lg" style={{ color: '#D14836' }} />
                                             </a>
-                                            <a href="#!">
+                                            <a href={user.youtube ? user.youtube : "https://www.youtube.com"}
+                                                target='blank' rel='noopner noreferrer'>
                                                 <MDBIcon fab icon="youtube me-3 fa-lg" style={{ color: '#FF0000' }} />
                                             </a>
                                         </div>
@@ -115,4 +127,4 @@ function User2Profile() {
     );
 }
 
-export default User2Profile;
+export default MyProfile;

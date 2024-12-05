@@ -2,9 +2,9 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ChatPage from "../pages/chat";
 import LoginForm from "../pages/login";
 import SignupForm from "../pages/mysignup";
-import UpdateProfile from "../components/profile";
+import UpdateProfile from "../components/updateprofile";
+import MyProfile from "../components/myprofile";
 import UserProfile from "../components/user";
-import User2Profile from "../components/user2";
 import { useEffect, useState } from "react";
 import { auth, onAuthStateChanged, doc, getDoc, db } from "./firebase";
 import React from 'react';
@@ -43,8 +43,8 @@ function AppRouter() {
                         <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignupForm />} />
                         <Route path="/chatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} />
                         <Route path="/updateprofile" element={User ? <UpdateProfile /> : <Navigate to={"/"} />} />
+                        <Route path="/myprofile" element={User ? <MyProfile /> : <Navigate to={"/"} />} />
                         <Route path="/userprofile" element={User ? <UserProfile /> : <Navigate to={"/"} />} />
-                        <Route path="/user2profile" element={User ? <User2Profile /> : <Navigate to={"/"} />} />
                     </Routes>
                 </BrowserRouter>
             }

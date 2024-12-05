@@ -11,7 +11,7 @@ import {
     db, addDoc, doc, collection, serverTimestamp, updateDoc, onSnapshot, query, orderBy, getDocs, getDoc, where,
     signOut, auth
 } from '../config/firebase';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, Navigate } from 'react-router-dom';
 import User from '../context/user';
 import { useDebounce } from 'use-debounce'
 
@@ -246,6 +246,11 @@ function ChatApp() {
     const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
     console.log(isTyping)
 
+    const handleClick = () => {
+        console.log("Button clicked!");
+        navigate (`/userprofile?${searchParams}`)
+    };
+
     return (
         <MainContainer
             responsive
@@ -315,7 +320,7 @@ function ChatApp() {
                     <ConversationHeader.Actions>
                         {/* <VoiceCallButton /> */}
                         {/* <VideoCallButton /> */}
-                        <EllipsisButton orientation="vertical" />
+                        <EllipsisButton orientation="vertical" onClick={handleClick} />
                     </ConversationHeader.Actions>
                 </ConversationHeader>
 
