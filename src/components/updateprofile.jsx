@@ -53,7 +53,7 @@ function UpdateProfile() {
                                 <a href='chatapp'>Home</a>
                             </MDBBreadcrumbItem>
                             <MDBBreadcrumbItem>
-                                <a href="userprofile">My Profile</a>
+                                <a href="myprofile">My Profile</a>
                             </MDBBreadcrumbItem>
                             <MDBBreadcrumbItem active>Update Profile</MDBBreadcrumbItem>
                         </MDBBreadcrumb>
@@ -69,7 +69,7 @@ function UpdateProfile() {
                                     // src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
                                     alt="avatar"
                                     className="rounded-circle mb-3"
-                                    style={{ width: '150px' }}
+                                    style={{ width: '150px',  cursor: 'pointer'}}
                                     fluid />
                                 {/* <p className="text-muted mb-1">Full Stack Developer</p> */}
                                 {/* <p className="text-muted mb-4">Bay Area, San Francisco, CA</p> */}

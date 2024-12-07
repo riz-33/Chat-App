@@ -14,6 +14,7 @@ import {
 import { useSearchParams, useNavigate, Navigate } from 'react-router-dom';
 import User from '../context/user';
 import { useDebounce } from 'use-debounce'
+import UpdateProfile from './updateprofile';
 
 function ChatApp() {
     const [messageInputValue, setMessageInputValue] = useState("")
@@ -251,6 +252,11 @@ function ChatApp() {
         navigate (`/userprofile?${searchParams}`)
     };
 
+    const myProfile = () => {
+        console.log("Button clicked!");
+        navigate (`/myprofile?${searchParams}`)
+    };
+
     return (
         <MainContainer
             responsive
@@ -262,11 +268,11 @@ function ChatApp() {
                 position="left"
             >
                 <ConversationHeader>
-                    <Avatar
+                    <Avatar style={{cursor: 'pointer'}}
                         name={"Zoe"}
                         src={user.photo || user.photo !== null ? user.photo :
                             `https://ui-avatars.com/api/?name=${user.username}&background=random`}
-                    // src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
+                            onClick={myProfile}
                     />
                     <ConversationHeader.Content
                         userName={user.username}

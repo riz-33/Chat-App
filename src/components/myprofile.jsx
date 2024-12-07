@@ -5,10 +5,11 @@ import {
 } from 'mdb-react-ui-kit';
 import { db, doc, getDoc } from '../config/firebase';
 import User from '../context/user';
-import { Navigate, useNavigate } from 'react-router-dom';
-
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function MyProfile() {
+    const navigate = useNavigate()
+    const searchParams = useSearchParams()
     const getUser = async () => {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
@@ -23,6 +24,11 @@ function MyProfile() {
     useEffect(() => {
         getUser();
     }, []);
+
+    const editProfile = () => {
+        console.log("Button clicked!");
+        navigate (`/updateprofile?${searchParams}`)
+    };
 
     const user = useContext(User).user
     return (
@@ -56,6 +62,7 @@ function MyProfile() {
                                         style={{ cursor: 'pointer' }}
                                         far
                                         icon="edit mb-5"
+                                        onClick={editProfile}
                                     />
                                 </MDBCol>
                                 <MDBCol md="8">
@@ -67,19 +74,8 @@ function MyProfile() {
                                                 <MDBTypography tag="h6">Email</MDBTypography>
                                                 <MDBCardText className="text-muted">{user.email}</MDBCardText>
                                             </MDBCol>
-                                            {/* <MDBCol size="6" className="mb-3">
-                                                <MDBTypography tag="h6">Phone</MDBTypography>
-                                                <MDBCardText className="text-muted">123 456 789</MDBCardText>
-                                            </MDBCol> */}
                                         </MDBRow>
-
-                                        {/* <MDBTypography tag="h6">Information</MDBTypography>
-                                        <hr className="mt-0 mb-4" /> */}
                                         <MDBRow className="pt-1">
-                                            {/* <MDBCol size="6" className="mb-3">
-                                                <MDBTypography tag="h6">Email</MDBTypography>
-                                                <MDBCardText className="text-muted">info@example.com</MDBCardText>
-                                            </MDBCol> */}
                                             <MDBCol size="12" className="mb-4">
                                                 <MDBTypography tag="h6">Phone</MDBTypography>
                                                 <MDBCardText className="text-muted">{user.number}</MDBCardText>
