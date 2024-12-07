@@ -10,6 +10,7 @@ import { auth, onAuthStateChanged, doc, getDoc, db } from "./firebase";
 import React from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
+import UserInfo from "../components/userinfo";
 
 function AppRouter() {
     const [User, setUser] = useState(false)
@@ -45,6 +46,7 @@ function AppRouter() {
                         <Route path="/updateprofile" element={User ? <UpdateProfile /> : <Navigate to={"/"} />} />
                         <Route path="/myprofile" element={User ? <MyProfile /> : <Navigate to={"/"} />} />
                         <Route path="/userprofile" element={User ? <UserProfile /> : <Navigate to={"/"} />} />
+                        <Route path="/userinfo" element={User ? <UserInfo /> : <Navigate to={"/"} />} />
                     </Routes>
                 </BrowserRouter>
             }
