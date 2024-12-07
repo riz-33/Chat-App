@@ -51,7 +51,7 @@ function UserProfile() {
                                         `https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp`}
                                         alt="Avatar" className="rounded-circle my-4" style={{ width: '100px' }} fluid />
                                     <MDBTypography tag="h5">{user.username}</MDBTypography>
-                                    <MDBCardText>{user.bio || "Web Designer"}</MDBCardText>
+                                    <MDBCardText>{user.bio}</MDBCardText>
                                 </MDBCol>
                                 <MDBCol md="8">
                                     <MDBCardBody className="p-4">

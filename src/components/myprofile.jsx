@@ -27,7 +27,7 @@ function MyProfile() {
 
     const editProfile = () => {
         console.log("Button clicked!");
-        navigate (`/updateprofile?${searchParams}`)
+        navigate(`/updateprofile?${user.uid}`)
     };
 
     const user = useContext(User).user
@@ -54,10 +54,11 @@ function MyProfile() {
                             <MDBRow className="g-0">
                                 <MDBCol md="4" className="gradient-custom text-center text-white"
                                     style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem' }}>
-                                    <MDBCardImage src={user.photo}
+                                    <MDBCardImage src={user.photo || user.photo !== null ? user.photo :
+                                        `https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp`}
                                         alt="Avatar" className="rounded-circle my-4" style={{ width: '100px' }} fluid />
                                     <MDBTypography tag="h5">{user.username}</MDBTypography>
-                                    <MDBCardText>Web Designer</MDBCardText>
+                                    <MDBCardText>{user.bio || "Enter Bio"}</MDBCardText>
                                     <MDBIcon
                                         style={{ cursor: 'pointer' }}
                                         far
@@ -78,7 +79,9 @@ function MyProfile() {
                                         <MDBRow className="pt-1">
                                             <MDBCol size="12" className="mb-4">
                                                 <MDBTypography tag="h6">Phone</MDBTypography>
-                                                <MDBCardText className="text-muted">{user.number}</MDBCardText>
+                                                <MDBCardText className="text-muted">{user.number ? user.number :
+                                                 "N/A"}
+                                                </MDBCardText>
                                             </MDBCol>
                                         </MDBRow>
 

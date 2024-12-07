@@ -254,7 +254,7 @@ function ChatApp() {
 
     const myProfile = () => {
         console.log("Button clicked!");
-        navigate (`/myprofile?${searchParams}`)
+        navigate (`/myprofile?${user.uid}`)
     };
 
     return (

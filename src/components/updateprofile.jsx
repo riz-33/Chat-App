@@ -42,6 +42,11 @@ function UpdateProfile() {
         getUser();
     }, []);
 
+    const uploadImage = () => {
+        console.log("Button clicked!");
+    };
+
+    
     const user = useContext(User).user
     return (
         <section style={{ backgroundColor: '#eee' }}>
@@ -65,11 +70,11 @@ function UpdateProfile() {
                         <MDBCard className="mb-4">
                             <MDBCardBody className="text-center">
                                 <MDBCardImage
+                                    onClick={uploadImage}
                                     src={user.photo}
-                                    // src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
                                     alt="avatar"
                                     className="rounded-circle mb-3"
-                                    style={{ width: '150px',  cursor: 'pointer'}}
+                                    style={{ width: '150px', cursor: 'pointer' }}
                                     fluid />
                                 {/* <p className="text-muted mb-1">Full Stack Developer</p> */}
                                 {/* <p className="text-muted mb-4">Bay Area, San Francisco, CA</p> */}
@@ -90,7 +95,7 @@ function UpdateProfile() {
                                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                         <MDBIcon fab icon="github fa-lg" style={{ color: '#333333' }} />
                                         <MDBCardText>
-                                        <a href="https://github.com/riz-33"
+                                            <a href="https://github.com/riz-33"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
@@ -134,7 +139,7 @@ function UpdateProfile() {
                                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                         <MDBIcon fab icon="linkedin fa-lg" style={{ color: '#0077b5' }} />
                                         <MDBCardText>
-                                        <a href="https://www.linkedin.com/in/muhammad-rizwan-quettawala-1a462b18b"
+                                            <a href="https://www.linkedin.com/in/muhammad-rizwan-quettawala-1a462b18b"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
@@ -156,7 +161,7 @@ function UpdateProfile() {
                                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                         <MDBIcon fab icon="youtube fa-lg" style={{ color: '#FF0000' }} />
                                         <MDBCardText>
-                                        <a href="https://www.youtube.com/channel/UCXDqo26MM7IN_La4OdRBWxQ"
+                                            <a href="https://www.youtube.com/channel/UCXDqo26MM7IN_La4OdRBWxQ"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
