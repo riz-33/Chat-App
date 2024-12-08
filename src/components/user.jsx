@@ -31,7 +31,7 @@ function UserProfile() {
         <section className="vh-100" style={{ backgroundColor: '#f4f5f7' }}>
             <MDBContainer className="py-5 h-100">
                 <MDBRow className='justify-content-center align-items-center'>
-                    <MDBCol lg="8" className="mb-4 mb-lg-0">
+                    <MDBCol lg="8" className="mb-2 mb-lg-0">
                         <MDBBreadcrumb className="bg-light rounded-3 p-3">
                             <MDBBreadcrumbItem>
                                 <a href='chatapp'>Home</a>

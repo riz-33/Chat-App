@@ -1,36 +1,20 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import {
     MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon,
     MDBBreadcrumb, MDBBreadcrumbItem
 } from 'mdb-react-ui-kit';
-import { db, doc, getDoc } from '../config/firebase';
 import User from '../context/user';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function MyProfile() {
     const navigate = useNavigate()
     const searchParams = useSearchParams()
-    const getUser = async () => {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-        } else {
-            console.log("No such document!");
-        }
-    }
-
-    useEffect(() => {
-        getUser();
-    }, []);
-
+    const user = useContext(User).user
     const editProfile = () => {
         console.log("Button clicked!");
         navigate(`/updateprofile?${user.uid}`)
     };
 
-    const user = useContext(User).user
     return (
         <section className="vh-100" style={{ backgroundColor: '#f4f5f7' }}>
             <MDBContainer className="py-5 h-100">
@@ -49,7 +33,7 @@ function MyProfile() {
                 </MDBRow>
 
                 <MDBRow className="justify-content-center align-items-center">
-                    <MDBCol lg="8" className="mb-4 mb-lg-0">
+                    <MDBCol lg="8" className="mb-2 mb-lg-0">
                         <MDBCard className="mb-3" style={{ borderRadius: '.5rem' }}>
                             <MDBRow className="g-0">
                                 <MDBCol md="4" className="gradient-custom text-center text-white"
@@ -80,7 +64,7 @@ function MyProfile() {
                                             <MDBCol size="12" className="mb-4">
                                                 <MDBTypography tag="h6">Phone</MDBTypography>
                                                 <MDBCardText className="text-muted">{user.number ? user.number :
-                                                 "N/A"}
+                                                    "N/A"}
                                                 </MDBCardText>
                                             </MDBCol>
                                         </MDBRow>

@@ -1,13 +1,13 @@
-import React from 'react';
-import { Box, Divider, Stack, TextField, Button, Grid, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Stack, TextField, Button, Grid, Typography } from '@mui/material';
 import {
-    auth, createUserWithEmailAndPassword, signInWithPopup, googleProvider, db, doc, setDoc, serverTimestamp
+    auth, createUserWithEmailAndPassword, db, doc, setDoc, serverTimestamp
 } from "../config/firebase";
 import { useForm } from "react-hook-form"
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import { FcGoogle } from "react-icons/fc";
+import User from '../context/user';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -50,6 +50,13 @@ const UserInfoContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const UserInfo = () => {
+    const user = useContext(User).user
+    // const editProfile = () => {
+    //     console.log("Button clicked!");
+    //     navigate(`/updateprofile?${user.uid}`)
+    // };
+
+
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const onSubmit = async (data) => {

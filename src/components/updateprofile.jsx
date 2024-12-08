@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useRef } from 'react';
 import {
     MDBCol,
     MDBContainer,
@@ -10,49 +10,23 @@ import {
     MDBBtn,
     MDBBreadcrumb,
     MDBBreadcrumbItem,
-    MDBProgress,
-    MDBProgressBar,
     MDBIcon,
     MDBListGroup,
     MDBListGroupItem
 } from 'mdb-react-ui-kit';
 import 'mdb-ui-kit/css/mdb.min.css';
-import {
-    db, addDoc, doc, collection, serverTimestamp, updateDoc, onSnapshot, query, orderBy, getDocs, getDoc, where,
-    signOut, auth
-} from '../config/firebase';
 import User from '../context/user';
 import * as mdb from 'mdb-ui-kit'; // lib
 window.mdb = mdb;
 
-
 function UpdateProfile() {
-    const getUser = async () => {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-        } else {
-            console.log("No such document!");
-        }
-    }
-
-    useEffect(() => {
-        getUser();
-    }, []);
-
-    const uploadImage = () => {
-        console.log("Button clicked!");
-    };
-
-
     const user = useContext(User).user
+
     return (
         <section style={{ backgroundColor: '#f4f5f7' }}>
             <MDBContainer style={{ paddingTop: '3rem', paddingBottom: '1.5rem' }} >
                 <MDBRow className='justify-content-center align-items-center'>
-                    <MDBCol lg="8" className="mb-4 mb-lg-0">
+                    <MDBCol lg="8" className="mb-2 mb-lg-0">
                         <MDBBreadcrumb className="bg-light rounded-3 p-3 mb-4">
                             <MDBBreadcrumbItem>
                                 <a href='chatapp'>Home</a>
@@ -70,7 +44,7 @@ function UpdateProfile() {
                         <MDBCard className="mb-3">
                             <MDBCardBody className="text-center">
                                 <MDBCardImage
-                                    onClick={uploadImage}
+                                    // onClick={uploadImage}
                                     src={user.photo}
                                     alt="avatar"
                                     className="rounded-circle mb-3"
@@ -79,7 +53,7 @@ function UpdateProfile() {
                                 {/* <p className="text-muted mb-1">Full Stack Developer</p> */}
                                 <p className="text-muted mb-3">Bay Area, San Francisco, CA</p>
                                 <div className="d-flex justify-content-center mb-3">
-                                    <MDBBtn>Update Image</MDBBtn>
+                                    {/* <MDBBtn onClick={uploadImageToFirestore}>Update Image</MDBBtn> */}
                                     <MDBBtn outline className="ms-1">Update Profile</MDBBtn>
                                 </div>
                             </MDBCardBody>
@@ -104,22 +78,23 @@ function UpdateProfile() {
                                         <MDBCardText className="text-muted">{user.email}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
-                                <hr />
-                                {/* <MDBRow>
+                                {/* <hr />
+                                <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Phone</MDBCardText>
-                                    </MDBCol>
-                                    <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{user.number}</MDBCardText>
-                                    </MDBCol>
-                                </MDBRow>
-                                <hr /> */}
+                                    </MDBCol> */}
+                                    {/* <MDBCol sm="9"> */}
+                                        {/* <MDBCardText className="text-muted">{user.number}</MDBCardText> */}
+                                    {/* </MDBCol> */}
+                                {/* </MDBRow> */}
+                                <hr />
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Mobile</MDBCardText>
+                                        {/* <label class="form-label" for="form8Example2">Email address</label> */}
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{user.number}</MDBCardText>
+                                        <MDBCardText className="text-muted"></MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 {/* <hr />
