@@ -83,9 +83,9 @@ function UpdateProfile() {
                                     <MDBCol sm="3">
                                         <MDBCardText>Phone</MDBCardText>
                                     </MDBCol> */}
-                                    {/* <MDBCol sm="9"> */}
-                                        {/* <MDBCardText className="text-muted">{user.number}</MDBCardText> */}
-                                    {/* </MDBCol> */}
+                                {/* <MDBCol sm="9"> */}
+                                {/* <MDBCardText className="text-muted">{user.number}</MDBCardText> */}
+                                {/* </MDBCol> */}
                                 {/* </MDBRow> */}
                                 <hr />
                                 <MDBRow>
@@ -94,7 +94,7 @@ function UpdateProfile() {
                                         {/* <label class="form-label" for="form8Example2">Email address</label> */}
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted"></MDBCardText>
+                                        <MDBCardText className="text-muted">{user.number}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 {/* <hr />

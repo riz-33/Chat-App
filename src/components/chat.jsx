@@ -59,7 +59,6 @@ function ChatApp() {
             chatId: chatId(),
             timeStamp: serverTimestamp()
         });
-
         await updateDoc(doc(db, "users", user.uid), {
             lastMessage: messageInputValue
         });

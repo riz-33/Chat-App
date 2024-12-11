@@ -1,11 +1,11 @@
-import ChatApp from "../components/chat";
+import NewChatApp from "../components/newchat";
 
-function ChatPage() {
+function NewChatPage() {
     return (
         <div>
-            <ChatApp />
+            <NewChatApp />
         </div>
     );
 }
 
-export default ChatPage;
+export default NewChatPage;

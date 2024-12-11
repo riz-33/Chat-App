@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import ChatPage from "../pages/chat";
+import NewChatPage from "../pages/chat";
 import LoginForm from "../pages/login";
 import SignupForm from "../pages/mysignup";
 import UpdateProfile from "../components/updateprofile";
@@ -42,7 +42,8 @@ function AppRouter() {
                     <Routes>
                         <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <LoginForm />} />
                         <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignupForm />} />
-                        <Route path="/chatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} />
+                        {/* <Route path="/newchatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} /> */}
+                        <Route path="/newchatapp" element={<NewChatPage/>}/>
                         <Route path="/updateprofile" element={User ? <UpdateProfile /> : <Navigate to={"/"} />} />
                         <Route path="/myprofile" element={User ? <MyProfile /> : <Navigate to={"/"} />} />
                         <Route path="/userprofile" element={User ? <UserProfile /> : <Navigate to={"/"} />} />
