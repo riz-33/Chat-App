@@ -10,7 +10,6 @@ import {
 } from '../config/firebase';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import User from '../context/user';
-import { message } from 'antd';
 
 function NewChatApp() {
     const [messageInputValue, setMessageInputValue] = useState("")

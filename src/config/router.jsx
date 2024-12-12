@@ -1,16 +1,16 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import NewChatPage from "../pages/chat";
+import ChatPage from "../pages/chat";
 import LoginForm from "../pages/login";
-import SignupForm from "../pages/mysignup";
-import UpdateProfile from "../components/updateprofile";
-import MyProfile from "../components/myprofile";
-import UserProfile from "../components/user";
+import SignupForm from "../pages/signup";
+import UpdateProfile from "../pages/updateprofile";
+import MyProfile from "../pages/myprofile";
+import UserProfile from "../pages/user";
+import UserInfo from "../pages/userinfo";
 import { useEffect, useState } from "react";
 import { auth, onAuthStateChanged, doc, getDoc, db } from "./firebase";
 import React from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
-import UserInfo from "../components/userinfo";
 
 function AppRouter() {
     const [User, setUser] = useState(false)
@@ -42,8 +42,8 @@ function AppRouter() {
                     <Routes>
                         <Route path="/" element={User ? <Navigate to={"/chatapp"} /> : <LoginForm />} />
                         <Route path="/signup" element={User ? <Navigate to={"/chatapp"} /> : <SignupForm />} />
-                        {/* <Route path="/newchatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} /> */}
-                        <Route path="/newchatapp" element={<NewChatPage/>}/>
+                        <Route path="/chatapp" element={User ? <ChatPage /> : <Navigate to={"/"} />} />
+                        {/* <Route path="/newchatapp" element={<NewChatPage/>}/> */}
                         <Route path="/updateprofile" element={User ? <UpdateProfile /> : <Navigate to={"/"} />} />
                         <Route path="/myprofile" element={User ? <MyProfile /> : <Navigate to={"/"} />} />
                         <Route path="/userprofile" element={User ? <UserProfile /> : <Navigate to={"/"} />} />
