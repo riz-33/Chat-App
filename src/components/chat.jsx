@@ -12,6 +12,8 @@ import {
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import User from '../context/user';
 import { useDebounce } from 'use-debounce';
+import { formatDistance } from "date-fns";
+import { message } from 'antd';
 
 function ChatApp() {
     const [messageInputValue, setMessageInputValue] = useState("")
@@ -44,23 +46,6 @@ function ChatApp() {
         return id;
     }
 
-    // const onSend = async () => {
-    //     setMessageInputValue("")
-    //     await addDoc(collection(db, "messages"), {
-    //         message: messageInputValue,
-    //         sentTime: new Date().toISOString(),
-    //         sender: user.uid,
-    //         receiver: currentChat.uid,
-    //         senderName: user.username,
-    //         receiverName: currentChat.username,
-    //         chatId: chatId(),
-    //         timeStamp: serverTimestamp()
-    //     });
-    //     await updateDoc(doc(db, "users", user.uid), {
-    //         lastMessage: messageInputValue
-    //     });
-    // }
-
     const onSend = async () => {
         setMessageInputValue("")
         await addDoc(collection(db, "messages"), {
@@ -87,13 +72,13 @@ function ChatApp() {
         });
     }
 
-    // const handleBackClick = () => setSidebarVisible(!sidebarVisible);
+    const handleBackClick = () => setSidebarVisible(!sidebarVisible);
 
     const handleConversationClick = useCallback(() => {
-        // if (sidebarVisible) {
-        // setSidebarVisible(false);
-        // }
-    }, [])
+        if (sidebarVisible) {
+            setSidebarVisible(false);
+        }
+    }, [sidebarVisible, setSidebarVisible])
 
     const getAllUsers = async () => {
         const q = query(collection(db, "users"), where("email", "!=", user.email));
@@ -104,6 +89,7 @@ function ChatApp() {
                 users.push(user)
 
             });
+            setCurrentChat(users[0])
             setChats(users)
         })
     }
@@ -214,30 +200,31 @@ function ChatApp() {
         getAllMessages()
     }, [currentChat])
 
-    // useEffect(() => {
-    //     if (sidebarVisible) {
-    //         setSidebarStyle({
-    //             display: "flex",
-    //             flexBasis: "auto",
-    //             width: "100%",
-    //             maxWidth: "100%"
-    //         });
-    //         setConversationContentStyle({
-    //             display: "flex"
-    //         });
-    //         setConversationAvatarStyle({
-    //             marginRight: "1em"
-    //         });
-    //         setChatContainerStyle({
-    //             display: "none"
-    //         });
-    //     } else {
-    //         setSidebarStyle({});
-    //         setConversationContentStyle({});
-    //         setConversationAvatarStyle({});
-    //         setChatContainerStyle({});
-    //     }
-    // }, [sidebarVisible, setSidebarVisible, setConversationContentStyle, setConversationAvatarStyle, setSidebarStyle, setChatContainerStyle]);
+    useEffect(() => {
+        if (sidebarVisible) {
+            setSidebarStyle({
+                display: "flex",
+                flexBasis: "auto",
+                width: "100%",
+                maxWidth: "100%"
+            });
+            setConversationContentStyle({
+                display: "flex"
+            });
+            setConversationAvatarStyle({
+                marginRight: "1em"
+            });
+            setChatContainerStyle({
+                display: "none"
+            });
+        } else {
+            setSidebarStyle({});
+            setConversationContentStyle({});
+            setConversationAvatarStyle({});
+            setChatContainerStyle({});
+        }
+    }, [sidebarVisible, setSidebarVisible, setConversationContentStyle, setConversationAvatarStyle,
+        setSidebarStyle, setChatContainerStyle]);
 
     // const isTyping = currentChat?.isTyping?.[chatId(currentChat.uid)]?.[currentChat.uid];
     // console.log(isTyping)
@@ -261,6 +248,8 @@ function ChatApp() {
         >
             <Sidebar
                 position="left"
+                scrollable={false}
+                style={sidebarStyle}
             >
                 <ConversationHeader>
                     <Avatar style={{ cursor: 'pointer' }}
@@ -294,12 +283,14 @@ function ChatApp() {
                                 info={v?.lastMessages?.[chatId(v.id)]?.lastMessage || ""}
                                 // lastSenderName={v.username}
                                 name={v.username}
+                                style={conversationContentStyle}
                             />
 
                             <Avatar
                                 name="Avatar"
                                 src={v.photo || v.photo !== null ? v.photo :
                                     `https://ui-avatars.com/api/?name=${v.username}&background=random`}
+                                style={conversationAvatarStyle}
                             // src={`https://ui-avatars.com/api/?name=${v.username}&background=random`}
                             // status="available"
                             />
@@ -308,18 +299,18 @@ function ChatApp() {
                 </ConversationList>
 
             </Sidebar>
-            <ChatContainer>
+            <ChatContainer style={chatContainerStyle}>
                 <ConversationHeader>
-                    <ConversationHeader.Back />
+                    <ConversationHeader.Back onClick={handleBackClick} />
                     <Avatar
-                        name={currentChat.username}
-                        src={currentChat.photo || currentChat.photo !== null ? currentChat.photo :
-                            `https://ui-avatars.com/api/?name=${currentChat.username}&background=random`}
+                        name={currentChat?.username}
+                        src={currentChat?.photo || currentChat?.photo !== null ? currentChat?.photo :
+                            `https://ui-avatars.com/api/?name=${currentChat?.username}&background=random`}
                     // src={`https://ui-avatars.com/api/?name=${currentChat.username}&background=random`}
                     />
                     <ConversationHeader.Content
-                        info="Active 10 mins ago"
-                        userName={currentChat.username}
+                        // info="Active 10 mins ago"
+                        userName={currentChat?.username}
                     />
                     <ConversationHeader.Actions>
                         {/* <VoiceCallButton /> */}
@@ -337,7 +328,7 @@ function ChatApp() {
                             {/* src={`https://ui-avatars.com/api/?name=${user.uid === v.sender ? user.username : */}
                             {/* currentChat?.username}&background=random`} */}
                             {/* /> */}
-                            {/* <Message.Footer sentTime={formatDistance(new Date(v.sentTime), new Date(), { addSuffix: true })} /> */}
+                            <Message.Footer sentTime={formatDistance(new Date(v.sentTime), new Date(), { addSuffix: true })} />
                         </Message>
                     ))}
                 </MessageList>
